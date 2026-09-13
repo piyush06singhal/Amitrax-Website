@@ -1,0 +1,6 @@
+{
+  "name": "AmitraX",
+  "description": "AmitraX is a modern technology company building purposeful digital products, intelligent systems, and scalable digital infrastructure.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
