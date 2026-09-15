@@ -7,8 +7,7 @@ interface HeroSceneProps {
 
 export const HeroScene: React.FC<HeroSceneProps> = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [fps, setFps] = useState<number>(60);
-  const [activePreset, setActivePreset] = useState<'architecture' | 'network' | 'lattice'>('architecture');
+  const fpsLabelRef = useRef<HTMLSpanElement>(null);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1.0);
   const [activeNodesCount, setActiveNodesCount] = useState<number>(36);
 
@@ -168,15 +167,13 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
 
     // Outer wireframe framing the shell with precision lines
     const shellWireGeo = new THREE.WireframeGeometry(shellGeo);
-    const shellWireLine = new THREE.LineSegments(
-      shellWireGeo,
-      new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.5,
-        linewidth: 1,
-      })
-    );
+    const shellWireMat = new THREE.LineBasicMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.5,
+      linewidth: 1,
+    });
+    const shellWireLine = new THREE.LineSegments(shellWireGeo, shellWireMat);
     coreGroup.add(shellWireLine);
 
     // 2.3 Layered Coordinate Gimbals / Orbital Data Latitude Rings
@@ -192,21 +189,21 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
     });
 
     const createTorusRing = (radius: number, tube: number, mat: THREE.Material) => {
-      const geo = new THREE.TorusGeometry(radius, tube, 4, 80);
-      return new THREE.Mesh(geo, mat);
+      const geometry = new THREE.TorusGeometry(radius, tube, 4, 80);
+      return { mesh: new THREE.Mesh(geometry, mat), geometry, material: mat };
     };
 
     const orbitRingA = createTorusRing(2.35, 0.012, ringMat1);
     const orbitRingB = createTorusRing(2.7, 0.012, ringMat2);
     const orbitRingC = createTorusRing(3.05, 0.012, ringMat1);
 
-    orbitRingA.rotation.x = Math.PI / 3;
-    orbitRingB.rotation.y = Math.PI / 4;
-    orbitRingC.rotation.z = Math.PI / 6;
+    orbitRingA.mesh.rotation.x = Math.PI / 3;
+    orbitRingB.mesh.rotation.y = Math.PI / 4;
+    orbitRingC.mesh.rotation.z = Math.PI / 6;
 
-    coreGroup.add(orbitRingA);
-    coreGroup.add(orbitRingB);
-    coreGroup.add(orbitRingC);
+    coreGroup.add(orbitRingA.mesh);
+    coreGroup.add(orbitRingB.mesh);
+    coreGroup.add(orbitRingC.mesh);
 
     // ==========================================
     // LAYER 2.4: INTERCONNECTED DATA NETWORK NODES & PACKETS
@@ -298,7 +295,8 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
     }
 
     const packetGeo = new THREE.BufferGeometry();
-    packetGeo.setAttribute('position', new THREE.BufferAttribute(packetPositions, 3));
+    const packetPositionAttr = new THREE.BufferAttribute(packetPositions, 3);
+    packetGeo.setAttribute('position', packetPositionAttr);
     const packetMat = new THREE.PointsMaterial({
       color: 0x38bdf8,
       size: 0.12,
@@ -380,6 +378,12 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
     let isVisible = true;
     const intersectionObserver = new IntersectionObserver((entries) => {
       isVisible = entries[0].isIntersecting;
+      if (isVisible) {
+        lastTime = performance.now();
+        startLoop();
+      } else {
+        stopLoop();
+      }
     });
     intersectionObserver.observe(container);
 
@@ -390,11 +394,22 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
     let lastTime = performance.now();
     let frameCounter = 0;
     let fpsTimer = 0;
+    let fps = 60;
+    let isLooping = false;
+    const startLoop = () => {
+      if (isLooping || !isVisible) return;
+      isLooping = true;
+      frameId = requestAnimationFrame(animate);
+    };
+    const stopLoop = () => {
+      isLooping = false;
+      cancelAnimationFrame(frameId);
+    };
 
     const animate = (time: number) => {
-      frameId = requestAnimationFrame(animate);
+      if (!isVisible || !isLooping) return;
 
-      if (!isVisible) return;
+      frameId = requestAnimationFrame(animate);
 
       const delta = Math.min((time - lastTime) / 1000, 0.1);
       lastTime = time;
@@ -403,7 +418,10 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       frameCounter++;
       fpsTimer += delta;
       if (fpsTimer >= 1.0) {
-        setFps(Math.round((frameCounter / fpsTimer)));
+        fps = Math.round(frameCounter / fpsTimer);
+        if (fpsLabelRef.current) {
+          fpsLabelRef.current.textContent = String(fps);
+        }
         frameCounter = 0;
         fpsTimer = 0;
       }
@@ -411,8 +429,8 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       const effectiveSpeed = prefersReducedMotion ? 0.05 : speedMultiplier;
 
       // 6.1 Mouse Lerp (Smooth inertia)
-      currentMouseX += (targetMouseX - currentMouseX) * 0.045;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.045;
+      currentMouseX += (targetMouseX - currentMouseX) * 0.08;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.08;
 
       // 6.2 Scroll Transition Calculation (Section 7)
       // As user scrolls down, camera dollys into environment, core expands
@@ -423,9 +441,9 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       const targetCamY = scrollFactor * 1.2 - currentMouseY * 0.8;
       const targetCamX = currentMouseX * 1.4;
 
-      camera.position.x += (targetCamX - camera.position.x) * 0.05;
-      camera.position.y += (targetCamY - camera.position.y) * 0.05;
-      camera.position.z += (targetCamZ - camera.position.z) * 0.06;
+      camera.position.x += (targetCamX - camera.position.x) * 0.08;
+      camera.position.y += (targetCamY - camera.position.y) * 0.08;
+      camera.position.z += (targetCamZ - camera.position.z) * 0.1;
       camera.lookAt(0, scrollFactor * 0.4, 0);
 
       // 6.3 Core Rotations & Dynamic Topology
@@ -439,12 +457,12 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       backgroundGroup.rotation.y += rotDelta * 0.15;
 
       // Orbital gimbal counter-rotations
-      orbitRingA.rotation.x += rotDelta * 1.2;
-      orbitRingB.rotation.y -= rotDelta * 0.9;
-      orbitRingC.rotation.z += rotDelta * 0.7;
+      orbitRingA.mesh.rotation.x += rotDelta * 1.2;
+      orbitRingB.mesh.rotation.y -= rotDelta * 0.9;
+      orbitRingC.mesh.rotation.z += rotDelta * 0.7;
 
       // Pulse the inner kernel
-      const pulse = 1 + Math.sin(time * 0.0025 * effectiveSpeed) * 0.08;
+      const pulse = 1 + Math.sin(time * 0.004 * effectiveSpeed) * 0.08;
       kernelMesh.scale.set(pulse, pulse, pulse);
 
       // Outer shell expansion based on scroll depth
@@ -457,9 +475,7 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       keyLight.position.y = 8 - currentMouseY * 4;
 
       // 6.4 Update Traveling Data Packets
-      const positionsAttr = packetGeo.attributes.position as THREE.BufferAttribute;
-      const posArray = positionsAttr.array as Float32Array;
-
+      // `packetPositionAttr` shares the same underlying Float32Array as `packetPositions`
       for (let p = 0; p < packetRoutes.length; p++) {
         const route = packetRoutes[p];
         route.progress += route.speed * effectiveSpeed;
@@ -476,18 +492,18 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
 
         if (vFrom && vTo) {
           const currentPos = new THREE.Vector3().lerpVectors(vFrom, vTo, route.progress);
-          posArray[p * 3] = currentPos.x;
-          posArray[p * 3 + 1] = currentPos.y;
-          posArray[p * 3 + 2] = currentPos.z;
+          packetPositions[p * 3] = currentPos.x;
+          packetPositions[p * 3 + 1] = currentPos.y;
+          packetPositions[p * 3 + 2] = currentPos.z;
         }
       }
-      positionsAttr.needsUpdate = true;
+      packetPositionAttr.needsUpdate = true;
 
       // Render
       renderer.render(scene, camera);
     };
 
-    frameId = requestAnimationFrame(animate);
+    startLoop();
 
     // ==========================================
     // 7. CLEANUP
@@ -511,6 +527,7 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       shellGeo.dispose();
       shellMat.dispose();
       shellWireGeo.dispose();
+      shellWireMat.dispose();
       nodeGeo.dispose();
       nodeMat.dispose();
       networkLinesGeo.dispose();
@@ -520,6 +537,14 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       fgCrossGeo.dispose();
       fgCrossMat.dispose();
 
+      // Gimbals / orbital rings
+      ringMat1.dispose();
+      ringMat2.dispose();
+      orbitRingA.geometry.dispose();
+      orbitRingB.geometry.dispose();
+      orbitRingC.geometry.dispose();
+
+      renderer.renderLists.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -539,7 +564,7 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-1.5 pointer-events-none font-mono text-[11px]">
         <div className="px-2.5 py-1 rounded bg-[#090e1a]/80 border border-white/10 backdrop-blur-md text-slate-400 flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-white font-semibold">{fps} FPS</span>
+          <span ref={fpsLabelRef} className="text-white font-semibold">60 FPS</span>
           <span className="text-slate-500">|</span>
           <span>{activeNodesCount} NODES</span>
         </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AMITRAX_PRODUCTS } from '../../data/products';
-import { Layers, Sparkles, Cpu, Database, ArrowRight, Shield } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
 
 interface NodeItem {
   id: string;
@@ -18,6 +19,8 @@ interface NodeItem {
 export const ProductEcosystemVisualization: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedNode, setSelectedNode] = useState<NodeItem | null>(null);
+  const selectedNodeRef = useRef<NodeItem | null>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,6 +38,15 @@ export const ProductEcosystemVisualization: React.FC = () => {
       height = canvas.height = 460;
     };
     window.addEventListener('resize', handleResize);
+
+    const isDark = theme === 'dark';
+    const ringStroke = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.12)';
+    const ringStrokeOuter = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(15, 23, 42, 0.08)';
+    const connectorProduct = isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(8, 145, 178, 0.22)';
+    const connectorLayer = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.10)';
+    const nodeFillCore = isDark ? '#0b1633' : '#e2e8f0';
+    const nodeFill = isDark ? '#070c1a' : '#cbd5e1';
+    const labelFill = isDark ? '#ffffff' : '#0f172a';
 
     const cx = width / 2;
     const cy = height / 2;
@@ -102,14 +114,14 @@ export const ProductEcosystemVisualization: React.FC = () => {
       // Draw Orbit Rings
       ctx.beginPath();
       ctx.arc(cx, cy, 145, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.strokeStyle = ringStroke;
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(cx, cy, 195, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.strokeStyle = ringStrokeOuter;
       ctx.stroke();
       ctx.setLineDash([]);
 
@@ -118,7 +130,7 @@ export const ProductEcosystemVisualization: React.FC = () => {
         ctx.beginPath();
         ctx.moveTo(coreNode.x, coreNode.y);
         ctx.lineTo(pNode.x, pNode.y);
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
+        ctx.strokeStyle = connectorProduct;
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
@@ -143,7 +155,7 @@ export const ProductEcosystemVisualization: React.FC = () => {
           ctx.beginPath();
           ctx.moveTo(pNode.x, pNode.y);
           ctx.lineTo(correspondingLayer.x, correspondingLayer.y);
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.strokeStyle = connectorLayer;
           ctx.lineWidth = 1;
           ctx.stroke();
         }
@@ -151,7 +163,7 @@ export const ProductEcosystemVisualization: React.FC = () => {
 
       // Draw all nodes
       allNodes.forEach((node) => {
-        const isHoveredOrSelected = selectedNode?.id === node.id;
+        const isHoveredOrSelected = selectedNodeRef.current?.id === node.id;
 
         // Outer glow
         ctx.beginPath();
@@ -162,14 +174,14 @@ export const ProductEcosystemVisualization: React.FC = () => {
         // Solid Body
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = node.type === 'core' ? '#0b1633' : '#070c1a';
+        ctx.fillStyle = node.type === 'core' ? nodeFillCore : nodeFill;
         ctx.fill();
         ctx.strokeStyle = node.color;
         ctx.lineWidth = isHoveredOrSelected ? 2.5 : 1.5;
         ctx.stroke();
 
         // Text label
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = labelFill;
         ctx.font = `${node.type === 'core' ? 'bold 11px' : '10px'} "Space Grotesk", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -194,6 +206,7 @@ export const ProductEcosystemVisualization: React.FC = () => {
           clicked = node;
         }
       });
+      selectedNodeRef.current = clicked;
       setSelectedNode(clicked);
     };
 
@@ -204,22 +217,22 @@ export const ProductEcosystemVisualization: React.FC = () => {
       canvas.removeEventListener('click', handleCanvasClick);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [selectedNode]);
+  }, [theme]);
 
   return (
-    <div className="relative w-full rounded-2xl bg-[#060914] border border-white/10 p-6 sm:p-8 overflow-hidden shadow-2xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+    <div className="relative w-full rounded-2xl bg-white dark:bg-[#060914] border border-slate-200 dark:border-white/10 p-6 sm:p-8 overflow-hidden shadow-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-200 dark:border-white/10">
         <div>
           <div className="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs mb-1">
             <Sparkles className="w-3.5 h-3.5" />
             <span>ECOSYSTEM TOPOLOGY</span>
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold font-display text-white">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white">
             Connected Engineering Graph
           </h3>
         </div>
 
-        <span className="text-xs font-mono text-slate-400">
+        <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
           Click any node to inspect relationships
         </span>
       </div>
@@ -230,20 +243,23 @@ export const ProductEcosystemVisualization: React.FC = () => {
 
         {/* Selected Node Inspector Flyout */}
         {selectedNode && (
-          <div className="absolute bottom-4 right-4 max-w-xs p-4 rounded-xl bg-black/80 border border-cyan-500/40 backdrop-blur-xl shadow-2xl text-left animate-in fade-in space-y-2 z-20">
+          <div className="absolute bottom-4 right-4 max-w-xs p-4 rounded-xl bg-white/95 dark:bg-black/80 border border-cyan-500/40 backdrop-blur-xl shadow-2xl text-left space-y-2 z-20">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] uppercase text-cyan-400 font-semibold">
                 {selectedNode.type.toUpperCase()} NODE
               </span>
               <button
-                onClick={() => setSelectedNode(null)}
-                className="text-slate-400 hover:text-white text-xs font-mono"
+                onClick={() => {
+                  selectedNodeRef.current = null;
+                  setSelectedNode(null);
+                }}
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-mono"
               >
                 ✕
               </button>
             </div>
-            <h4 className="text-sm font-bold text-white font-display">{selectedNode.name}</h4>
-            <p className="text-xs text-slate-300">{selectedNode.subtitle}</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white font-display">{selectedNode.name}</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300">{selectedNode.subtitle}</p>
             {selectedNode.link && (
               <Link
                 to={selectedNode.link}

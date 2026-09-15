@@ -28,7 +28,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (theme === 'light') {
       root.classList.remove('dark');
       root.classList.add('light');
-      document.body.classList.remove('bg-[#07090e]', 'text-[#e2e8f0]', 'bg-[#04060d]');
+      document.body.classList.remove('bg-[#04060d]', 'text-slate-100');
       document.body.classList.add('bg-[#f8fafc]', 'text-[#0f172a]');
     } else {
       root.classList.remove('light');

@@ -3,12 +3,15 @@ import React from 'react';
 export interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
   showSubline?: boolean;
+  /** Render the wordmark light-on-dark (e.g. for the dark-ink footer). */
+  inverse?: boolean;
   className?: string;
 }
 
 export const Logo: React.FC<LogoProps> = ({
   size = 'md',
   showSubline = false,
+  inverse = false,
   className = '',
 }) => {
   const sizeStyles = {
@@ -25,14 +28,14 @@ export const Logo: React.FC<LogoProps> = ({
         
         {/* Core Brand Wordmark */}
         <span
-          className={`font-display font-bold tracking-tight text-white ${sizeStyles[size]} transition-colors duration-200`}
+          className={`font-display font-bold tracking-tight ${inverse ? 'text-white' : 'text-slate-900 dark:text-white'} ${sizeStyles[size]} transition-colors duration-200`}
         >
           Amitra<span className="text-cyan-400">X</span>
         </span>
       </div>
 
       {showSubline && (
-        <span className="font-mono text-[9px] text-slate-500 tracking-widest uppercase pl-4.5 mt-0.5">
+        <span className="font-mono text-[9px] text-slate-500 dark:text-slate-400 tracking-widest uppercase pl-4.5 mt-0.5">
           ENGINEERING SYSTEMS
         </span>
       )}

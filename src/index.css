@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: the site toggles `.dark` on <html>, but Tailwind v4's
+   default `dark:` variant listens to prefers-color-scheme. Point it at the class. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     /* Brand Design Tokens - Crisp Luminous Architectural Platinum / Slate (Light Default) */
-    --atx-bg: #f8fafc;
+    --atx-bg: #f7f9fc;
     --atx-bg-card: #ffffff;
-    --atx-bg-elevated: #f1f5f9;
-    --atx-bg-subtle: #e2e8f0;
+    --atx-bg-elevated: #f3f7fb;
+    --atx-bg-subtle: #e7eef6;
 
     --atx-border: rgba(15, 23, 42, 0.09);
     --atx-border-hover: rgba(15, 23, 42, 0.18);
@@ -72,14 +76,14 @@
   body {
     background-color: var(--atx-bg);
     color: var(--atx-text-primary);
-    overflow-x: hidden;
+    overflow-x: clip;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(2, 132, 199, 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 85% 60%, rgba(37, 99, 235, 0.05), transparent),
-      radial-gradient(ellipse 60% 40% at 15% 40%, rgba(124, 58, 237, 0.04), transparent);
+      radial-gradient(ellipse 72% 44% at 50% -15%, rgba(14, 165, 233, 0.12), transparent),
+      radial-gradient(ellipse 55% 38% at 100% 45%, rgba(59, 130, 246, 0.06), transparent),
+      radial-gradient(ellipse 52% 34% at 0% 62%, rgba(20, 184, 166, 0.045), transparent);
     background-attachment: fixed;
     transition: background-color 0.4s ease, color 0.4s ease;
   }
@@ -90,6 +94,21 @@
       radial-gradient(ellipse 60% 40% at 85% 60%, rgba(59, 130, 246, 0.07), transparent),
       radial-gradient(ellipse 60% 40% at 15% 40%, rgba(168, 85, 247, 0.06), transparent);
   }
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.25);
+  color: #0f172a;
+}
+
+.dark ::selection {
+  background: rgba(56, 189, 248, 0.3);
+  color: #f8fafc;
+}
+
+:focus-visible {
+  outline: 2px solid var(--atx-cyan);
+  outline-offset: 3px;
 }
 
 /* Typography Utility Classes */
@@ -152,6 +171,36 @@
   border-color: var(--atx-border-accent);
   box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.08), 0 0 24px -6px var(--atx-cyan-glow);
   transform: translateY(-2px);
+}
+
+.atx-page-shell {
+  position: relative;
+  overflow: clip;
+  background: transparent;
+}
+
+.atx-page-orb {
+  position: absolute;
+  width: 38rem;
+  height: 38rem;
+  border-radius: 9999px;
+  background: rgba(14, 165, 233, 0.08);
+  filter: blur(110px);
+  pointer-events: none;
+}
+
+.atx-page-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .4rem .7rem;
+  border: 1px solid rgba(2, 132, 199, .22);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, .72);
+  color: #0369a1;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
 }
 
 .dark .atx-card {

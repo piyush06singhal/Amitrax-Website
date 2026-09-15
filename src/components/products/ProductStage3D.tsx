@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { Product } from '../../types/products';
-import { Maximize2, RotateCcw, Eye, Sparkles } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 interface ProductStage3DProps {
   product: Product;
@@ -15,8 +15,6 @@ export const ProductStage3D: React.FC<ProductStage3DProps> = ({
   autoRotate = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [interactiveRotation, setInteractiveRotation] = useState({ x: 0, y: 0 });
   const isDragging = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
@@ -160,12 +158,14 @@ export const ProductStage3D: React.FC<ProductStage3DProps> = ({
     ring.position.y = -1.1;
     scene.add(ring);
 
-    setIsLoaded(true);
-
-    // Animation Loop
+    // Animation Loop with visibility gating
     let clock = new THREE.Clock();
+    let isVisible = true;
+    let isLooping = false;
 
     const animate = () => {
+      if (!isVisible || !isLooping) return;
+
       const elapsedTime = clock.getElapsedTime();
 
       // Floating gentle bobbing
@@ -182,7 +182,18 @@ export const ProductStage3D: React.FC<ProductStage3DProps> = ({
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    const startLoop = () => {
+      if (isLooping || !isVisible) return;
+      isLooping = true;
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const stopLoop = () => {
+      isLooping = false;
+      cancelAnimationFrame(animationFrameId);
+    };
+
+    startLoop();
 
     // Mouse Interaction
     const onMouseDown = (e: MouseEvent) => {
@@ -223,14 +234,50 @@ export const ProductStage3D: React.FC<ProductStage3DProps> = ({
     });
     resizeObserver.observe(container);
 
+    // Visibility Observer to stop the animation loop when off-screen
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      isVisible = entries[0].isIntersecting;
+      if (isVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    });
+    visibilityObserver.observe(container);
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       container.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+
+      // Dispose geometries
+      frameGeometry.dispose();
+      frameEdges.dispose();
+      glassGeometry.dispose();
+      layer1Geo.dispose();
+      block1Geo.dispose();
+      block2Geo.dispose();
+      particleGeometry.dispose();
+      ringGeo.dispose();
+
+      // Dispose materials
+      frameLineMaterial.dispose();
+      glassMaterial.dispose();
+      layer1Mat.dispose();
+      block1Mat.dispose();
+      block2Mat.dispose();
+      particleMaterial.dispose();
+      ringMat.dispose();
+
+      renderer.renderLists.dispose();
       renderer.dispose();
       scene.clear();
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, [product, autoRotate]);
 

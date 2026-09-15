@@ -83,7 +83,7 @@ export const LifecycleStageVisual: React.FC<LifecycleStageVisualProps> = ({
         ];
 
         // Converging animated lines
-        nodes.forEach((n, idx) => {
+        nodes.forEach((n) => {
           ctx.beginPath();
           ctx.moveTo(cx, cy);
           ctx.lineTo(n.x, n.y);

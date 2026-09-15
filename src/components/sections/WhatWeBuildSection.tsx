@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import { BuildingBlocks3D } from '../3d/BuildingBlocks3D';
 import { CAPABILITIES } from '../../data/capabilities';
-import { 
-  AppWindow, 
-  BrainCircuit, 
-  Server, 
-  Globe, 
-  Workflow, 
-  Cpu, 
-  Layers, 
+import {
+  AppWindow,
+  BrainCircuit,
+  Server,
+  Globe,
+  Workflow,
+  Cpu,
+  Layers,
   Box,
-  ShieldCheck,
-  ArrowRight,
   CheckCircle2
 } from 'lucide-react';
 import { SectionHeader } from '../ui/SectionHeader';
-import { Button } from '../ui/Button';
 
 export const WhatWeBuildSection: React.FC = () => {
   const [viewMode, setViewMode] = useState<'3d' | 'grid'>('3d');
@@ -31,16 +28,16 @@ export const WhatWeBuildSection: React.FC = () => {
       case 'web-applications':
         return <Globe className="w-6 h-6 text-emerald-400" />;
       case 'automation':
-        return <Workflow className="w-6 h-6 text-teal-400" />;
+        return <Workflow className="w-6 h-6 text-cyan-400" />;
       case 'technology-products':
-        return <Cpu className="w-6 h-6 text-pink-400" />;
+        return <Cpu className="w-6 h-6 text-rose-400" />;
       default:
         return <Layers className="w-6 h-6 text-cyan-400" />;
     }
   };
 
   return (
-    <section id="what-we-build" className="relative w-full py-20 lg:py-28 bg-[#05070e] border-t border-white/5">
+    <section id="what-we-build" className="relative w-full py-20 lg:py-28 bg-slate-50 dark:bg-[#05070e] border-t border-slate-200 dark:border-white/5">
       {/* Background Accent Gradients */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -55,7 +52,7 @@ export const WhatWeBuildSection: React.FC = () => {
           description="We do not build generic software. We engineer purposeful digital products, scalable multi-tenant platforms, and grounded intelligent systems designed for durability and human utility."
           badgeVariant="cyan"
           actionSlot={
-            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-[#0a0f24] border border-white/10 shadow-lg">
+            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-white dark:bg-[#0a0f24] border border-slate-300 dark:border-white/10 shadow-lg">
               <button
                 type="button"
                 id="btn-view-3d"
@@ -63,7 +60,7 @@ export const WhatWeBuildSection: React.FC = () => {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === '3d'
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-md'
-                    : 'text-slate-300 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Box className="w-3.5 h-3.5" />
@@ -77,7 +74,7 @@ export const WhatWeBuildSection: React.FC = () => {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === 'grid'
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-md'
-                    : 'text-slate-300 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
@@ -96,34 +93,34 @@ export const WhatWeBuildSection: React.FC = () => {
             {CAPABILITIES.map((cap) => (
               <div
                 key={cap.id}
-                className="p-7 rounded-2xl bg-[#090e21]/80 border border-white/10 flex flex-col justify-between group hover:border-cyan-400/50 hover:bg-[#0c1430] transition-all duration-300 shadow-xl backdrop-blur-md"
+                className="p-7 rounded-2xl bg-white dark:bg-[#090e21]/80 border border-slate-200 dark:border-white/10 flex flex-col justify-between group hover:border-cyan-500/50 dark:hover:border-cyan-400/50 hover:bg-slate-50 dark:hover:bg-[#0c1430] transition-all duration-300 shadow-sm dark:shadow-xl dark:backdrop-blur-md"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 shadow-inner">
+                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 shadow-inner">
                       {getIcon(cap.id)}
                     </div>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-white/[0.05] border border-white/10 text-slate-300">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300">
                       {cap.shortName}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold font-display text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                  <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                     {cap.title}
                   </h3>
-                  <p className="text-xs font-semibold text-cyan-400/90 mb-3">
+                  <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400/90 mb-3">
                     {cap.tagline}
                   </p>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
                     {cap.summary}
                   </p>
 
                   <div className="space-y-2 mb-6">
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                       Scope of Work
                     </span>
                     {cap.detailedScope.map((scope, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                      <div key={idx} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300">
                         <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
                         <span>{scope}</span>
                       </div>
@@ -131,12 +128,12 @@ export const WhatWeBuildSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap gap-1.5">
                     {cap.technologies.slice(0, 3).map((t, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded text-[11px] font-medium bg-white/[0.04] border border-white/5 text-slate-300"
+                        className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300"
                       >
                         {t}
                       </span>

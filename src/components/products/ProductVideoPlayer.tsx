@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw, Loader2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Loader2 } from 'lucide-react';
 
 interface ProductVideoPlayerProps {
   videoUrl?: string;
@@ -16,13 +16,13 @@ export const ProductVideoPlayer: React.FC<ProductVideoPlayerProps> = ({
   className = '',
   autoplayMuted = false,
 }) => {
-  if (!videoUrl) return null;
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(autoplayMuted);
   const [isMuted, setIsMuted] = useState(autoplayMuted);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  if (!videoUrl) return null;
 
   const togglePlay = () => {
     if (!videoRef.current) return;

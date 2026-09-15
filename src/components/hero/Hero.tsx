@@ -137,21 +137,21 @@ export const Hero: React.FC = () => {
               </Magnetic>
             </motion.div>
 
-            {/* Micro Metrics row */}
+            {/* Micro Metrics row — all values grounded in real data layer */}
             <motion.div variants={lineVariants} className="pt-4 flex items-center gap-6 text-xs font-mono text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-2">
-                <span className="text-slate-900 dark:text-white font-bold">100%</span>
-                <span>Deterministic</span>
+                <span className="text-slate-900 dark:text-white font-bold">5</span>
+                <span>Architecture Layers</span>
               </div>
               <span className="text-slate-300 dark:text-slate-700">•</span>
               <div className="flex items-center gap-2">
-                <span className="text-slate-900 dark:text-white font-bold">&lt; 1ms</span>
-                <span>Kernel Latency</span>
+                <span className="text-slate-900 dark:text-white font-bold">9</span>
+                <span>Services</span>
               </div>
               <span className="text-slate-300 dark:text-slate-700">•</span>
               <div className="flex items-center gap-2">
-                <span className="text-slate-900 dark:text-white font-bold">6</span>
-                <span>Core Domains</span>
+                <span className="text-slate-900 dark:text-white font-bold">Strict</span>
+                <span>Type Contracts</span>
               </div>
             </motion.div>
           </motion.div>
@@ -177,7 +177,8 @@ export const Hero: React.FC = () => {
                     muted
                     playsInline
                     className="w-full h-full object-cover opacity-80"
-                    src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-charts-and-data-31912-large.mp4"
+                    poster="/videos/hero-globe-poster.jpg"
+                    src="/videos/hero-cinematic-globe.mp4"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
                     <span className="text-xs font-mono text-cyan-400">CINEMATIC TELEMETRY</span>

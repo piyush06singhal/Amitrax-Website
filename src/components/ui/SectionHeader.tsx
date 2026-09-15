@@ -25,12 +25,13 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => {
   const isCentered = align === 'center';
 
+  // Accent text reads bright on dark surfaces, deep-tinted on light surfaces.
   const badgeStyles = {
-    cyan: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300',
-    sapphire: 'bg-blue-500/10 border-blue-500/30 text-blue-300',
-    purple: 'bg-purple-500/10 border-purple-500/30 text-purple-300',
-    emerald: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
-    amber: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
+    cyan: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-700 dark:text-cyan-300',
+    sapphire: 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-300',
+    purple: 'bg-purple-500/10 border-purple-500/30 text-purple-700 dark:text-purple-300',
+    emerald: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300',
+    amber: 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300',
   };
 
   return (
@@ -57,7 +58,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         </div>
 
         {/* Primary Section Title */}
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight leading-tight">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-slate-900 dark:text-white tracking-tight leading-tight">
           {title}{' '}
           {titleHighlight && (
             <span className="gradient-text-cyan">{titleHighlight}</span>
@@ -66,7 +67,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 
         {/* Supporting Explanatory Paragraph */}
         {description && (
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
             {description}
           </p>
         )}

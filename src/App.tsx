@@ -17,6 +17,7 @@ import { ServicesPage } from './pages/ServicesPage';
 import { ArchitecturePage } from './pages/ArchitecturePage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
@@ -40,7 +41,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/architecture" element={<ArchitecturePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

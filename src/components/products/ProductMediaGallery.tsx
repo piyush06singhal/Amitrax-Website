@@ -84,7 +84,7 @@ export const ProductMediaGallery: React.FC<ProductMediaGalleryProps> = ({ media,
           role="dialog"
           aria-modal="true"
           aria-label={`Media viewer: ${media[activeViewerIndex].title}`}
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8"
         >
           {/* Top Bar */}
           <div className="flex items-center justify-between max-w-7xl mx-auto w-full z-10">

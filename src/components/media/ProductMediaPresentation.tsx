@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { ScreenshotPresentationStyle, MediaAsset } from '../../types/media';
-import { 
-  Laptop, 
-  Layers, 
-  Maximize2, 
-  Compass, 
-  Sparkles, 
-  Eye, 
-  Terminal, 
-  Activity,
-  CheckCircle2
+import {
+  Laptop,
+  Layers,
+  Maximize2,
+  Compass,
+  Eye,
+  Terminal,
+  Activity
 } from 'lucide-react';
 
 interface ProductMediaPresentationProps {
@@ -136,7 +134,7 @@ export const ProductMediaPresentation: React.FC<ProductMediaPresentationProps> =
           </div>
 
           {/* Floating Layer 1: Telemetry Inspector Overlay */}
-          <div className="absolute top-8 left-8 sm:top-14 sm:left-14 p-4 rounded-xl bg-black/85 border border-cyan-500/40 backdrop-blur-xl shadow-2xl max-w-xs space-y-2 animate-in fade-in">
+          <div className="absolute top-8 left-8 sm:top-14 sm:left-14 p-4 rounded-xl bg-black/85 border border-cyan-500/40 backdrop-blur-xl shadow-2xl max-w-xs space-y-2">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-cyan-400 font-semibold flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5" />
@@ -145,12 +143,12 @@ export const ProductMediaPresentation: React.FC<ProductMediaPresentationProps> =
               <span className="text-emerald-400 text-[10px]">SYNCED</span>
             </div>
             <p className="text-xs text-slate-300">
-              Deterministic state synchronization active with 0.8ms consensus response.
+              Deterministic state synchronization active with low-latency consensus response.
             </p>
           </div>
 
           {/* Floating Layer 2: Core Spec Overlay */}
-          <div className="absolute bottom-8 right-8 sm:bottom-14 sm:right-14 p-4 rounded-xl bg-black/85 border border-purple-500/40 backdrop-blur-xl shadow-2xl max-w-xs space-y-2 animate-in fade-in">
+          <div className="absolute bottom-8 right-8 sm:bottom-14 sm:right-14 p-4 rounded-xl bg-black/85 border border-purple-500/40 backdrop-blur-xl shadow-2xl max-w-xs space-y-2">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-purple-400 font-semibold flex items-center gap-1.5">
                 <Terminal className="w-3.5 h-3.5" />
@@ -159,7 +157,7 @@ export const ProductMediaPresentation: React.FC<ProductMediaPresentationProps> =
               <span className="text-purple-300 text-[10px]">READY</span>
             </div>
             <p className="text-xs text-slate-300">
-              Spatial interface planes isolated from compute loops to guarantee 120 FPS.
+              Spatial interface planes isolated from compute loops for fluid frame pacing.
             </p>
           </div>
         </div>

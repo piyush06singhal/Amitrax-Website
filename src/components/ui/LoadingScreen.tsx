@@ -54,7 +54,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             {/* Minimal AmitraX Monogram */}
             <div className="relative w-14 h-14 mb-5 flex items-center justify-center">
               <div
-                className="absolute inset-0 rounded-xl border border-cyan-500/40 rotate-45 animate-spin duration-1000"
+                className="absolute inset-0 rounded-xl border border-cyan-500/40 rotate-45 animate-spin"
                 style={{ animationDuration: '6s' }}
               />
               <div className="absolute inset-2 rounded-lg border border-slate-300 dark:border-white/10 -rotate-12" />

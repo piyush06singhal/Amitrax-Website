@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Layers, ChevronRight, Cpu, Network, ShieldCheck } from 'lucide-react';
+import { Layers, ChevronRight } from 'lucide-react';
 
 interface StageConcept {
   id: string;
@@ -21,11 +21,11 @@ const STAGE_CONCEPTS: StageConcept[] = [
     title: 'Adaptive Surface Plane',
     subtitle: 'High-Fidelity Interface System',
     category: 'Spatial Human Interface',
-    description: 'Dynamic canvas rendering millions of vector points at native display refresh rates. Designed for continuous data density without perceptual lag.',
+    description: 'Dynamic canvas rendering high-density vector surfaces at native display refresh rates, designed for continuous data density without perceptual lag.',
     metrics: [
-      { label: 'Render Budget', value: '16.6ms / frame' },
-      { label: 'Node Capacity', value: '100k+ instanced' },
-      { label: 'Feedback Loop', value: '< 2ms tactile' },
+      { label: 'Render Budget', value: 'Optimized frame pacing' },
+      { label: 'Node Capacity', value: 'High-density instancing' },
+      { label: 'Feedback Loop', value: 'Low-latency tactile' },
     ],
     targetPos: { x: -2.2, y: 0.5, z: 4.5 },
     targetLook: { x: -2.0, y: 0, z: 0 },
@@ -38,9 +38,9 @@ const STAGE_CONCEPTS: StageConcept[] = [
     category: 'Intelligent Orchestration',
     description: 'Directed graph orchestrating parallel multi-model reasoning, JSON contract verification, and autonomous semantic validation before state commitment.',
     metrics: [
-      { label: 'Contract Integrity', value: '100% Zod validated' },
-      { label: 'Parallel Branches', value: 'Up to 32 concurrent' },
-      { label: 'Token Efficiency', value: '-38% vs raw prompt' },
+      { label: 'Contract Integrity', value: 'Fully schema-validated' },
+      { label: 'Parallel Branches', value: 'Concurrent execution' },
+      { label: 'Token Efficiency', value: 'Reduced token consumption' },
     ],
     targetPos: { x: 0.2, y: 0.8, z: 5.2 },
     targetLook: { x: 0, y: 0, z: 0 },
@@ -53,9 +53,9 @@ const STAGE_CONCEPTS: StageConcept[] = [
     category: 'Real-time Infrastructure',
     description: 'Mathematical CRDT protocol synchronizing local mutations across distributed peer nodes with zero centralized lock contention and cryptographic verification.',
     metrics: [
-      { label: 'Local Convergence', value: 'Sub-millisecond' },
+      { label: 'Local Convergence', value: 'Low-latency convergence' },
       { label: 'Network Fallback', value: 'WebRTC → WS → HTTP' },
-      { label: 'Conflict Rate', value: '0.00% by design' },
+      { label: 'Conflict Rate', value: 'Zero-conflict by design' },
     ],
     targetPos: { x: 2.4, y: 0.3, z: 4.6 },
     targetLook: { x: 2.0, y: 0, z: 0 },
@@ -91,6 +91,7 @@ export const ProductSpatialView: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
     // Lights
@@ -233,7 +234,7 @@ export const ProductSpatialView: React.FC = () => {
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
-    let frameId: number;
+    let frameId: number | null = null;
     let clock = new THREE.Clock();
 
     const animate = () => {
@@ -241,8 +242,8 @@ export const ProductSpatialView: React.FC = () => {
       const elapsed = clock.getElapsedTime();
 
       // Camera lerping to target
-      camera.position.lerp(cameraTargetPos.current, 0.045);
-      currentCameraLook.current.lerp(cameraTargetLook.current, 0.045);
+      camera.position.lerp(cameraTargetPos.current, 0.09);
+      currentCameraLook.current.lerp(cameraTargetLook.current, 0.09);
       camera.lookAt(currentCameraLook.current);
 
       // Subtle float on panels
@@ -258,30 +259,67 @@ export const ProductSpatialView: React.FC = () => {
 
     animate();
 
+    // Viewport gating: pause the render loop while the container is off-screen,
+    // and resume (with a fresh clock delta) the moment it becomes visible again.
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (frameId === null) {
+            clock.getDelta(); // discard accumulated time so the scene does not jump
+            animate();
+          }
+        } else if (frameId !== null) {
+          cancelAnimationFrame(frameId);
+          frameId = null;
+        }
+      },
+      { threshold: 0.05 }
+    );
+    intersectionObserver.observe(container);
+
     return () => {
-      cancelAnimationFrame(frameId);
+      if (frameId !== null) cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
-      if (renderer.domElement && container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
+      intersectionObserver.disconnect();
+
+      // Dispose every GPU resource: panel frames, edges, internal lines,
+      // corner pins, data beams, particle points, and the grid helper.
+      scene.traverse((child) => {
+        const resource = child as unknown as {
+          geometry?: THREE.BufferGeometry;
+          material?: THREE.Material | THREE.Material[];
+        };
+        if (resource.geometry) resource.geometry.dispose();
+        if (resource.material) {
+          if (Array.isArray(resource.material)) resource.material.forEach((m) => m.dispose());
+          else resource.material.dispose();
+        }
+      });
+
+      // Lights hold no GPU geometry, but dispose them for completeness.
+      [ambientLight, cyanLight, purpleLight].forEach((light) => {
+        const disposable = light as unknown as { dispose?: () => void };
+        if (typeof disposable.dispose === 'function') disposable.dispose();
+      });
+
       renderer.dispose();
-      gridHelper.dispose();
+      container.innerHTML = '';
     };
   }, []);
 
   return (
-    <div className="relative w-full rounded-2xl border border-white/10 bg-[#070b13] overflow-hidden shadow-2xl">
+    <div className="relative w-full rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#070b13] overflow-hidden shadow-2xl">
       {/* Top Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-white/10 bg-[#090e1a]/80 backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#090e1a]/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="font-mono text-xs text-slate-400 uppercase tracking-wider">
+          <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Interactive Product Spatial View // 3D Architecture Canvas
           </span>
         </div>
 
         {/* Step Selector Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-black/40 border border-white/10">
+        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10">
           {STAGE_CONCEPTS.map((concept, index) => (
             <button
               key={concept.id}
@@ -290,8 +328,8 @@ export const ProductSpatialView: React.FC = () => {
               onClick={() => setActiveStep(index)}
               className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all flex items-center gap-1.5 ${
                 activeStep === index
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <span>{concept.step}</span>
@@ -321,39 +359,39 @@ export const ProductSpatialView: React.FC = () => {
         </div>
 
         {/* Right Side: Detailed Engineered Breakdown of the Selected Spatial Layer (5 cols) */}
-        <div className="lg:col-span-5 p-6 lg:p-8 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-white/10 bg-[#090e1a]/60 backdrop-blur-md">
+        <div className="lg:col-span-5 p-6 lg:p-8 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#090e1a]/60 backdrop-blur-md">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <span className="font-mono text-xs px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+              <span className="font-mono text-xs px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20">
                 LAYER {activeConcept.step} // {activeConcept.category}
               </span>
-              <span className="font-mono text-xs text-slate-500">AMITRAX SYSTEM SPECS</span>
+              <span className="font-mono text-xs text-slate-500 dark:text-slate-400">AMITRAX SYSTEM SPECS</span>
             </div>
 
-            <h3 className="text-2xl font-bold font-display text-white mb-1 tracking-tight">
+            <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white mb-1 tracking-tight">
               {activeConcept.title}
             </h3>
-            <p className="text-sm font-medium text-cyan-400/90 mb-4">
+            <p className="text-sm font-medium text-cyan-700 dark:text-cyan-400 mb-4">
               {activeConcept.subtitle}
             </p>
 
-            <p className="text-slate-300 text-sm leading-relaxed mb-6">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
               {activeConcept.description}
             </p>
 
             {/* Architecture Metrics Grid */}
             <div className="space-y-2.5 mb-6">
-              <div className="font-mono text-[11px] text-slate-400 uppercase tracking-wider">
+              <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Engineering Benchmarks
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {activeConcept.metrics.map((metric, i) => (
                   <div
                     key={i}
-                    className="p-3 rounded-lg bg-black/40 border border-white/10 flex flex-col justify-between"
+                    className="p-3 rounded-lg bg-slate-50 dark:bg-[#090e1a]/60 border border-slate-200 dark:border-white/10 flex flex-col justify-between"
                   >
-                    <span className="text-[11px] font-mono text-slate-400">{metric.label}</span>
-                    <span className="text-sm font-semibold font-mono text-white mt-1">
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">{metric.label}</span>
+                    <span className="text-sm font-semibold font-mono text-slate-900 dark:text-white mt-1">
                       {metric.value}
                     </span>
                   </div>
@@ -363,18 +401,18 @@ export const ProductSpatialView: React.FC = () => {
           </div>
 
           {/* Navigation to next layer */}
-          <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
             <button
               type="button"
               onClick={() => setActiveStep((prev) => (prev > 0 ? prev - 1 : STAGE_CONCEPTS.length - 1))}
-              className="px-3 py-1.5 rounded-lg border border-white/10 text-xs font-mono text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
             >
               ← Previous Plane
             </button>
             <button
               type="button"
               onClick={() => setActiveStep((prev) => (prev < STAGE_CONCEPTS.length - 1 ? prev + 1 : 0))}
-              className="px-4 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-xs font-mono text-cyan-300 hover:bg-cyan-500/30 transition-colors flex items-center gap-1.5"
+              className="px-4 py-1.5 rounded-lg bg-cyan-500/10 dark:bg-cyan-500/20 border border-cyan-500/40 text-xs font-mono text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/20 dark:hover:bg-cyan-500/30 transition-colors flex items-center gap-1.5"
             >
               <span>Next Plane</span>
               <ChevronRight className="w-3.5 h-3.5" />

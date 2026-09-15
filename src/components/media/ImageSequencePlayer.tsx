@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ImageSequenceFrame } from '../../types/media';
-import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Layers, 
-  Terminal, 
-  Cpu, 
-  Sparkles, 
-  Activity,
-  CheckCircle2,
-  ChevronRight
+import {
+  Play,
+  Pause,
+  RotateCcw
 } from 'lucide-react';
 
 const DEFAULT_SEQUENCE_FRAMES: ImageSequenceFrame[] = [
@@ -20,7 +13,7 @@ const DEFAULT_SEQUENCE_FRAMES: ImageSequenceFrame[] = [
     phaseLabel: 'PHASE 01 // INITIALIZATION',
     title: 'System Initialization & Core Telemetry',
     description: 'Kernel boots with immutable state definitions and cryptographic peer verification.',
-    techSpec: 'Memory allocation: 14MB • Cold startup: 32ms • Zero ungrounded dependencies',
+    techSpec: 'Boot sequence: Single-pass initialization • Typed state definitions • No ungrounded dependencies',
     colorAccent: '#38bdf8',
   },
   {
@@ -29,7 +22,7 @@ const DEFAULT_SEQUENCE_FRAMES: ImageSequenceFrame[] = [
     phaseLabel: 'PHASE 02 // ARCHITECTURE',
     title: 'Topological Architecture & Schema Bounds',
     description: 'Data pipelines instantiate typed graphs and distributed consensus boundaries.',
-    techSpec: 'DAG verification: 100% deterministic • Latency tier: Sub-millisecond IPC',
+    techSpec: 'DAG verification: Schema-validated steps • Latency tier: Low-overhead IPC',
     colorAccent: '#6366f1',
   },
   {
@@ -38,7 +31,7 @@ const DEFAULT_SEQUENCE_FRAMES: ImageSequenceFrame[] = [
     phaseLabel: 'PHASE 03 // DATA INGESTION',
     title: 'Streaming Ingestion & Cognitive Routing',
     description: 'Neural inference pipelines process live vector inputs with deterministic guardrails.',
-    techSpec: 'Throughput: 85,000 events/sec • Guardrail verification: Strict zero-drift',
+    techSpec: 'Throughput: High-volume streaming • Guardrails: Deterministic output checks',
     colorAccent: '#a855f7',
   },
   {
@@ -47,7 +40,7 @@ const DEFAULT_SEQUENCE_FRAMES: ImageSequenceFrame[] = [
     phaseLabel: 'PHASE 04 // INTERFACE SYNTHESIS',
     title: 'Spatial Interface & GPU Rendering Plane',
     description: 'Sub-pixel responsive interface components project data directly to WebGL viewports.',
-    techSpec: 'Frame budget: 120 FPS rock-steady • Zero render thrash • Spatial projection',
+    techSpec: 'Frame budget: Optimized render loop • Constrained redraw scope • Spatial projection',
     colorAccent: '#10b981',
   },
   {
@@ -70,15 +63,18 @@ interface ImageSequencePlayerProps {
 
 export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
   frames = DEFAULT_SEQUENCE_FRAMES,
-  title = 'System Genesis Sequence',
   className = '',
   autoPlayDefault = false,
 }) => {
   const [currentFrameIdx, setCurrentFrameIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlayDefault);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const currentFrameIdxRef = useRef(currentFrameIdx);
+  const activeFrameRef = useRef<ImageSequenceFrame>(frames[0]);
 
   const activeFrame = frames[currentFrameIdx] || frames[0];
+  currentFrameIdxRef.current = currentFrameIdx;
+  activeFrameRef.current = activeFrame;
 
   // Auto-play timer loop
   useEffect(() => {
@@ -115,7 +111,8 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
 
       const cx = width / 2;
       const cy = height / 2;
-      const accent = activeFrame.colorAccent;
+      const accent = activeFrameRef.current.colorAccent;
+      const currentFrameIdx = currentFrameIdxRef.current;
 
       // Draw background subtle digital coordinate grid
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
@@ -250,19 +247,19 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationId);
     };
-  }, [currentFrameIdx, activeFrame]);
+  }, []);
 
   return (
     <div
-      className={`relative w-full rounded-3xl bg-gradient-to-br from-[#090f24] via-[#060917] to-[#04060e] border border-white/10 p-6 sm:p-8 space-y-6 shadow-2xl overflow-hidden ${className}`}
+      className={`relative w-full rounded-3xl bg-gradient-to-br from-slate-50 via-white to-white dark:from-[#090f24] dark:via-[#060917] dark:to-[#04060e] border border-slate-200 dark:border-white/10 p-6 sm:p-8 space-y-6 shadow-2xl overflow-hidden ${className}`}
     >
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-4">
         <div>
           <span className="text-[11px] font-mono font-semibold uppercase tracking-wider block" style={{ color: activeFrame.colorAccent }}>
             {activeFrame.phaseLabel}
           </span>
-          <h3 className="text-xl sm:text-2xl font-bold font-display text-white mt-1">
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white mt-1">
             {activeFrame.title}
           </h3>
         </div>
@@ -272,7 +269,7 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
           <button
             type="button"
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-mono text-white flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-white/[0.06] hover:bg-slate-200/80 dark:hover:bg-white/[0.12] border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-900 dark:text-white flex items-center gap-1.5 transition-all"
             aria-label={isPlaying ? 'Pause sequence' : 'Play sequence'}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
@@ -282,7 +279,7 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
           <button
             type="button"
             onClick={() => setCurrentFrameIdx(0)}
-            className="p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-slate-300 hover:text-white transition-all"
+            className="p-1.5 rounded-xl bg-slate-100/80 dark:bg-white/[0.06] hover:bg-slate-200/80 dark:hover:bg-white/[0.12] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
             aria-label="Restart sequence"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -307,7 +304,7 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
 
       {/* Frame Scrubber Bar */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+        <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
           <span>PROGRESSIVE SEQUENCE SCRUBBER</span>
           <span>STEP {currentFrameIdx + 1} OF {frames.length}</span>
         </div>
@@ -325,12 +322,12 @@ export const ImageSequencePlayer: React.FC<ImageSequencePlayerProps> = ({
                 }}
                 className={`p-2 rounded-xl border text-left transition-all ${
                   isActive
-                    ? 'bg-white/[0.08] border-cyan-400/80 ring-1 ring-cyan-400/40'
-                    : 'bg-white/[0.02] border-white/5 hover:border-white/20'
+                    ? 'bg-cyan-500/10 dark:bg-white/[0.08] border-cyan-400/80 ring-1 ring-cyan-400/40'
+                    : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/5 hover:border-slate-400 dark:hover:border-white/20'
                 }`}
               >
-                <span className="text-[10px] font-mono block text-slate-400">0{idx + 1}</span>
-                <span className="text-xs font-semibold text-white truncate block">
+                <span className="text-[10px] font-mono block text-slate-500 dark:text-slate-400">0{idx + 1}</span>
+                <span className="text-xs font-semibold text-slate-900 dark:text-white truncate block">
                   {frame.phaseLabel.split('//')[1]?.trim() || frame.phaseLabel}
                 </span>
               </button>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, Layers, ShieldCheck, Mail } from 'lucide-react';
+import { Sparkles, ArrowRight, Layers, Mail } from 'lucide-react';
 
 interface ProductLabEmptyStateProps {
   filteredMessage?: string;
@@ -36,6 +36,13 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
     };
     window.addEventListener('resize', handleResize);
 
+    // Pause rendering when the canvas scrolls off-screen
+    let isVisible = true;
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      isVisible = entries[0].isIntersecting;
+    });
+    intersectionObserver.observe(canvas);
+
     // Geometric lattice nodes forming an abstract architectural cube / product scaffold
     const nodes: { x: number; y: number; z: number; ox: number; oy: number; oz: number }[] = [];
     const size = 65;
@@ -57,6 +64,10 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
     let angle = 0;
 
     const render = () => {
+      animationFrameId = requestAnimationFrame(render);
+
+      if (!isVisible) return;
+
       ctx.clearRect(0, 0, width, height);
 
       angle += 0.008;
@@ -120,14 +131,13 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
         ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
         ctx.fill();
       });
-
-      animationFrameId = requestAnimationFrame(render);
     };
 
     render();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      intersectionObserver.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -135,7 +145,7 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
   return (
     <div
       id="product-empty-state"
-      className="relative w-full rounded-3xl bg-gradient-to-b from-[#090e21]/90 via-[#060a17]/90 to-[#04060e] border border-cyan-500/30 p-8 sm:p-12 text-center overflow-hidden shadow-2xl backdrop-blur-xl"
+      className="relative w-full rounded-3xl bg-gradient-to-b from-slate-100 via-white to-white dark:from-[#090e21]/90 dark:via-[#060a17]/90 dark:to-[#04060e] border border-cyan-500/30 p-8 sm:p-12 text-center overflow-hidden shadow-2xl backdrop-blur-xl"
     >
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 blur-[100px] pointer-events-none" />
@@ -152,16 +162,16 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
           <span>INCUBATION PROTOCOL</span>
         </div>
 
-        <h3 className="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight">
+        <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900 dark:text-white tracking-tight">
           {title}
         </h3>
 
-        <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
           {description}
         </p>
 
         {filteredMessage && (
-          <p className="text-xs text-slate-400 font-mono pt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono pt-2">
             {filteredMessage}
           </p>
         )}
@@ -188,7 +198,7 @@ export const ProductLabEmptyState: React.FC<ProductLabEmptyStateProps> = ({
 
           <Link
             to="/architecture"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white text-xs sm:text-sm font-medium transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs sm:text-sm font-medium transition-all"
           >
             <Layers className="w-4 h-4 text-cyan-400" />
             <span>Explore How We Engineer</span>
