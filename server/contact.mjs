@@ -6,7 +6,7 @@
  *   fullName, email, organization?, inquiryType?, problemStatement
  */
 
-const DEFAULT_TO = 'amitbouddh595@gmail.com';
+const DEFAULT_TO = 'piyush.singhal.2004@gmail.com';
 const DEFAULT_FROM = 'AmitraX Website <onboarding@resend.dev>';
 const MAX_BODY_BYTES = 64 * 1024;
 

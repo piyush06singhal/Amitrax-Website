@@ -27,7 +27,7 @@ Configure via env or `.env` (see [.env.example](.env.example)):
 
 ```bash
 RESEND_API_KEY=re_...          # from https://resend.com/api-keys
-CONTACT_TO=amitbouddh595@gmail.com
+CONTACT_TO=your-resend-account-email@gmail.com
 RESEND_FROM="AmitraX Website <onboarding@resend.dev>"   # use a Resend-verified domain sender for production
 ```
 
