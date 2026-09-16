@@ -14,9 +14,21 @@ Marketing site for **AmitraX Technologies Inc.** — engineering services, archi
 
 ```bash
 npm install
-npm run dev      # start dev server (http://localhost:5173)
+npm run dev      # start dev server (http://localhost:3000)
 npm run build    # production build
-npm run preview  # preview production build
+npm start        # serve dist/ + contact API (see below)
+```
+
+## Contact form email (Resend)
+
+The contact form POSTs to `/api/contact`, which forwards the message to your inbox via [Resend](https://resend.com). The API key lives **server-side only** — a Vite dev middleware handles the route in `npm run dev`, and [server.mjs](server.mjs) serves it in production.
+
+Configure via env or `.env` (see [.env.example](.env.example)):
+
+```bash
+RESEND_API_KEY=re_...          # from https://resend.com/api-keys
+CONTACT_TO=amitbouddh595@gmail.com
+RESEND_FROM="AmitraX Website <onboarding@resend.dev>"   # use a Resend-verified domain sender for production
 ```
 
 ## Structure

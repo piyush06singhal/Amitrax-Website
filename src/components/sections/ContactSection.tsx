@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { COMPANY_IDENTITY } from '../../data/companyData';
 import { Button } from '../ui/Button';
-import {
-  ArrowUpRight,
-  Send,
-  CheckCircle2,
-  Copy,
-  Mail,
-  ShieldCheck
-} from 'lucide-react';
+import { Send, CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface ContactFormData {
   fullName: string;
@@ -18,17 +11,20 @@ interface ContactFormData {
   problemStatement: string;
 }
 
-export const ContactSection: React.FC = () => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    fullName: '',
-    email: '',
-    organization: '',
-    inquiryType: 'Project discussion',
-    problemStatement: '',
-  });
+type SubmitState = 'idle' | 'sending' | 'success' | 'error';
 
-  const [submitted, setSubmitted] = useState(false);
-  const [copied, setCopied] = useState(false);
+const EMPTY_FORM: ContactFormData = {
+  fullName: '',
+  email: '',
+  organization: '',
+  inquiryType: 'Project discussion',
+  problemStatement: '',
+};
+
+export const ContactSection: React.FC = () => {
+  const [formData, setFormData] = useState<ContactFormData>(EMPTY_FORM);
+  const [submitState, setSubmitState] = useState<SubmitState>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const inquiryOptions: ('General inquiry' | 'Project discussion' | 'Technical collaboration' | 'Joining / Careers')[] = [
     'Project discussion',
@@ -37,33 +33,34 @@ export const ContactSection: React.FC = () => {
     'Joining / Careers',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.fullName && formData.email && formData.problemStatement) {
-      setSubmitted(true);
+    if (!formData.fullName || !formData.email || !formData.problemStatement) return;
+
+    setSubmitState('sending');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) throw new Error(data?.error || 'There was a problem sending your message.');
+      setSubmitState('success');
+    } catch (err) {
+      setSubmitState('error');
+      setErrorMsg(err instanceof Error ? err.message : 'There was a problem sending your message.');
     }
   };
 
-  const copyDraft = () => {
-    const text = `AmitraX Conversation Starter:
-From: ${formData.fullName} (${formData.email})
-Organization: ${formData.organization || 'Independent'}
-Type: ${formData.inquiryType}
-Problem / Inquiry:
-${formData.problemStatement}`;
-
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const resetForm = () => {
+    setFormData(EMPTY_FORM);
+    setSubmitState('idle');
+    setErrorMsg('');
   };
-
-  const mailtoHref = `mailto:${COMPANY_IDENTITY.contactEmail}?subject=${encodeURIComponent(
-    `[AmitraX Inquiry: ${formData.inquiryType}] ${formData.fullName}`
-  )}&body=${encodeURIComponent(
-    `Name: ${formData.fullName}\nEmail: ${formData.email}\nOrganization: ${
-      formData.organization || 'N/A'
-    }\nInquiry Type: ${formData.inquiryType}\n\nNote / Problem Statement:\n${formData.problemStatement}`
-  )}`;
 
   return (
     <section id="contact" className="relative w-full py-20 lg:py-28 bg-white dark:bg-[#04060d] border-t border-slate-200 dark:border-white/5">
@@ -119,38 +116,23 @@ ${formData.problemStatement}`;
           {/* Right Column: Inquiry Form (7 cols) */}
           <div className="lg:col-span-7">
             <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-50 via-white to-white dark:from-[#090f24] dark:via-[#0a0f24]/90 dark:to-[#050914] border border-slate-200 dark:border-cyan-500/30 shadow-xl dark:shadow-2xl dark:backdrop-blur-xl">
-              {submitted ? (
+              {submitState === 'success' ? (
                 <div className="py-12 text-center space-y-4">
                   <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.3)]">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white">
-                    Inquiry Draft Prepared
+                    Message Sent
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Thank you, {formData.fullName}. You can dispatch your message directly via your email client, or copy the formatted text.
+                    Thank you, {formData.fullName}. Your inquiry was delivered to our team inbox.
+                    We'll get back to you within 24–48 hours.
                   </p>
-
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                    <a href={mailtoHref} className="w-full sm:w-auto">
-                      <Button variant="primary" size="md" iconRight={<ArrowUpRight className="w-4 h-4" />}>
-                        Open in Mail Client
-                      </Button>
-                    </a>
-                    <button
-                      type="button"
-                      onClick={copyDraft}
-                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-300 dark:border-white/10 dark:hover:border-white/20 text-xs font-semibold text-slate-900 dark:text-white transition-all flex items-center justify-center gap-2"
-                    >
-                      <Copy className="w-4 h-4" />
-                      <span>{copied ? 'Copied to Clipboard!' : 'Copy Inquiry Draft'}</span>
-                    </button>
-                  </div>
 
                   <div className="pt-4">
                     <button
                       type="button"
-                      onClick={() => setSubmitted(false)}
+                      onClick={resetForm}
                       className="text-xs text-slate-500 dark:text-slate-400 dark:hover:text-cyan-300 hover:text-cyan-700 underline cursor-pointer"
                     >
                       Send another message
@@ -243,6 +225,22 @@ ${formData.problemStatement}`;
                     />
                   </div>
 
+                  {submitState === 'error' && (
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30">
+                      <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                      <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed">
+                        {errorMsg} If the email service is temporary unavailable, you can reach us directly at{' '}
+                        <a
+                          href={`mailto:${COMPANY_IDENTITY.contactEmail}`}
+                          className="underline font-semibold"
+                        >
+                          {COMPANY_IDENTITY.contactEmail}
+                        </a>
+                        .
+                      </p>
+                    </div>
+                  )}
+
                   <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
                       We respond directly. No unsolicited marketing.
@@ -252,9 +250,16 @@ ${formData.problemStatement}`;
                       type="submit"
                       variant="primary"
                       size="md"
-                      iconRight={<Send className="w-4 h-4" />}
+                      disabled={submitState === 'sending'}
+                      iconRight={
+                        submitState === 'sending' ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )
+                      }
                     >
-                      Send Message
+                      {submitState === 'sending' ? 'Sending…' : 'Send Message'}
                     </Button>
                   </div>
                 </form>

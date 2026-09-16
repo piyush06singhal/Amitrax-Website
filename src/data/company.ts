@@ -14,7 +14,7 @@ export const COMPANY_IDENTITY = {
     'We reject technology for novelty’s sake. Every line of code, every architectural choice, and every interface interaction must trace directly to solving a tangible constraint or human friction point.',
   foundedYear: '2026',
   status: 'Active Engineering Studio',
-  contactEmail: 'contact@amitrax.tech',
+  contactEmail: 'amitbouddh595@gmail.com',
   location: 'Global Digital Studio',
 };
 
