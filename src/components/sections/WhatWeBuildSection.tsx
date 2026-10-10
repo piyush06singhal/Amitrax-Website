@@ -1,150 +1,36 @@
-import React, { useState } from 'react';
-import { BuildingBlocks3D } from '../3d/BuildingBlocks3D';
+import React from 'react';
 import { CAPABILITIES } from '../../data/capabilities';
-import {
-  AppWindow,
-  BrainCircuit,
-  Server,
-  Globe,
-  Workflow,
-  Cpu,
-  Layers,
-  Box,
-  CheckCircle2
-} from 'lucide-react';
-import { SectionHeader } from '../ui/SectionHeader';
+import { Reveal } from '../motion/Reveal';
+import { OfferingArtwork, OfferingScene } from './OfferingArtwork';
+import './offerings-editorial.css';
 
-export const WhatWeBuildSection: React.FC = () => {
-  const [viewMode, setViewMode] = useState<'3d' | 'grid'>('3d');
+const scenes: OfferingScene[] = ['website', 'workspace', 'workflow', 'website', 'workflow', 'direction'];
+const outcomes = ['Make the right first impression.', 'Give your team a clearer day.', 'Make room for human judgment.', 'Make every screen feel considered.', 'Connect the work between tools.', 'Find the right shape for your idea.'];
 
-  const getIcon = (id: string) => {
-    switch (id) {
-      case 'digital-products':
-        return <AppWindow className="w-6 h-6 text-cyan-400" />;
-      case 'software-platforms':
-        return <Server className="w-6 h-6 text-blue-400" />;
-      case 'intelligent-systems':
-        return <BrainCircuit className="w-6 h-6 text-purple-400" />;
-      case 'web-applications':
-        return <Globe className="w-6 h-6 text-emerald-400" />;
-      case 'automation':
-        return <Workflow className="w-6 h-6 text-cyan-400" />;
-      case 'technology-products':
-        return <Cpu className="w-6 h-6 text-rose-400" />;
-      default:
-        return <Layers className="w-6 h-6 text-cyan-400" />;
-    }
-  };
-
-  return (
-    <section id="what-we-build" className="relative w-full py-20 lg:py-28 bg-slate-50 dark:bg-[#05070e] border-t border-slate-200 dark:border-white/5">
-      {/* Background Accent Gradients */}
-      <div className="absolute top-1/4 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <SectionHeader
-          label="WHAT AMITRAX BUILDS"
-          sublabel="6 Core Pillars"
-          title="Engineered for"
-          titleHighlight="Real-World Impact"
-          description="We do not build generic software. We engineer purposeful digital products, scalable multi-tenant platforms, and grounded intelligent systems designed for durability and human utility."
-          badgeVariant="cyan"
-          actionSlot={
-            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-white dark:bg-[#0a0f24] border border-slate-300 dark:border-white/10 shadow-lg">
-              <button
-                type="button"
-                id="btn-view-3d"
-                onClick={() => setViewMode('3d')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-                  viewMode === '3d'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-md'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Box className="w-3.5 h-3.5" />
-                <span>3D Spatial Matrix</span>
-              </button>
-
-              <button
-                type="button"
-                id="btn-view-grid"
-                onClick={() => setViewMode('grid')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
-                  viewMode === 'grid'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-md'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Domain Breakdown</span>
-              </button>
+export const WhatWeBuildSection: React.FC = () => (
+  <section id="what-we-build" className="studio-section offering-surface">
+    <div className="studio-container">
+      <Reveal><header className="offering-intro">
+        <div><p className="studio-kicker">What we can make together</p><h2 className="studio-title">Made for real-world use.</h2></div>
+        <p className="studio-copy">Strategy, design, and development, brought together. These original studio concepts illustrate the kinds of experiences we can create; they are not client projects.</p>
+      </header></Reveal>
+      <div className="offering-examples">
+        {CAPABILITIES.map((capability, index) => <Reveal key={capability.id}>
+          <article className={`offering-example offering-example-${index}`}>
+            <figure><OfferingArtwork scene={scenes[index]} label={`${capability.title}: ${outcomes[index]}`} /><figcaption className="offering-caption"><span>{outcomes[index]}</span><span>Concept / 0{index + 1}</span></figcaption></figure>
+            <div>
+              <span className="studio-kicker">0{index + 1} / {capability.shortName}</span>
+              <h3>{capability.title}</h3>
+              <p className="offering-tagline">{capability.tagline}</p><p>{capability.summary}</p>
+              <details className="offering-scope"><summary>Explore the scope & approach</summary>
+                <h4>What this can include</h4><ul>{capability.detailedScope.map(scope => <li key={scope}>{scope}</li>)}</ul>
+                <h4>Our focus</h4><p>{capability.systemGuarantees.join(' · ')}</p>
+                <h4>Methods & tools</h4><p>{capability.technologies.join(' · ')}</p>
+              </details>
             </div>
-          }
-        />
-
-        {/* 3D Interactive Connected System (Centerpiece) */}
-        {viewMode === '3d' ? (
-          <BuildingBlocks3D />
-        ) : (
-          /* Detailed 6 Domains Cards Matrix with Rich Color Accents */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CAPABILITIES.map((cap) => (
-              <div
-                key={cap.id}
-                className="p-7 rounded-2xl bg-white dark:bg-[#090e21]/80 border border-slate-200 dark:border-white/10 flex flex-col justify-between group hover:border-cyan-500/50 dark:hover:border-cyan-400/50 hover:bg-slate-50 dark:hover:bg-[#0c1430] transition-all duration-300 shadow-sm dark:shadow-xl dark:backdrop-blur-md"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 shadow-inner">
-                      {getIcon(cap.id)}
-                    </div>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300">
-                      {cap.shortName}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
-                    {cap.title}
-                  </h3>
-                  <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400/90 mb-3">
-                    {cap.tagline}
-                  </p>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-                    {cap.summary}
-                  </p>
-
-                  <div className="space-y-2 mb-6">
-                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                      Scope of Work
-                    </span>
-                    {cap.detailedScope.map((scope, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                        <span>{scope}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex flex-wrap gap-1.5">
-                    {cap.technologies.slice(0, 3).map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+          </article>
+        </Reveal>)}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);

@@ -1,213 +1,84 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { getFeaturedProduct, getAllProductCategories, getFilteredProducts } from '../data/products';
-import { ProductCard } from '../components/products/ProductCard';
-import { FeaturedProductExperience } from '../components/products/FeaturedProductExperience';
-import { ProductLabEmptyState } from '../components/products/ProductLabEmptyState';
-import { ProductEcosystemVisualization } from '../components/products/ProductEcosystemVisualization';
-import { FlaskConical, Search, Share2 } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { ArrowUpRight, Compass } from 'lucide-react';
+import { PageIntro } from '../components/ui/PageIntro';
+import { ButtonLink } from '../components/ui/Button';
+import { Reveal } from '../components/motion/Reveal';
+const fieldnotesUrl = new URL('../components/hero/homepage-fieldnotes.svg', import.meta.url).href;
+const daylightUrl = new URL('../components/hero/homepage-daylight.svg', import.meta.url).href;
+
+const explorations = [
+  {
+    id: 'fieldnotes' as const,
+    name: 'Fieldnotes — a quieter place to read',
+    discipline: 'Content design / Editorial interface',
+    summary: 'An original exploration of a small reading library: generous type, deliberate hierarchy, and just enough navigation.',
+    question: 'How can a growing collection of articles stay inviting instead of becoming an endless feed?',
+    decisions: 'Lead with the article title and a short description. Keep category choices visible, make the active filter explicit, and let the content carry the visual identity.',
+    next: 'A fuller prototype would explore article reading, saved items, and search. The category filter here is a working interaction; article destinations are not implemented.',
+  },
+  {
+    id: 'daylight' as const,
+    name: 'Daylight — the next step, in view',
+    discipline: 'Product thinking / Workflow interface',
+    summary: 'A lightweight enquiry workspace concept that gives each request a clear status and a useful next action.',
+    question: 'How can a focused workspace help someone decide what deserves attention next?',
+    decisions: 'Keep the daily view calm and action-oriented. Surface the next useful step instead of turning a simple workflow into a dashboard of metrics.',
+    next: 'A fuller prototype would add saved preferences, calendar connections, and a fuller mobile flow. This is a local concept study, not a connected product.',
+  },
+];
 
 export const ProductsPage: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [selectedStatus, setSelectedStatus] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showEcosystemGraph, setShowEcosystemGraph] = useState<boolean>(false);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.title = 'Product Lab & Ecosystem | AmitraX';
-  }, []);
-
-  const featuredProduct = useMemo(() => getFeaturedProduct(), []);
-  const allCategories = useMemo(() => ['All', ...getAllProductCategories()], []);
-  const allStatuses: (string)[] = [
-    'All',
-    'live',
-    'beta',
-    'in-development',
-    'prototype',
-    'exploring',
-    'concept',
-  ];
-
-  const filteredProducts = useMemo(() => {
-    return getFilteredProducts({
-      category: selectedCategory,
-      status: selectedStatus,
-      search: searchQuery,
-    });
-  }, [selectedCategory, selectedStatus, searchQuery]);
-
-  const handleResetFilters = () => {
-    setSelectedCategory('All');
-    setSelectedStatus('All');
-    setSearchQuery('');
-  };
+  useEffect(() => { window.scrollTo(0, 0); document.title = 'Studio explorations | AmitraX'; }, []);
 
   return (
-    <div className="w-full pt-28 pb-24 bg-white dark:bg-[#04060d] relative overflow-hidden">
-      {/* Unique Aurora Teal & Neon Violet Ambient Atmospheric Glow */}
-      <div className="absolute top-20 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute top-[480px] right-10 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[170px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
-        {/* Page Hero Header */}
-        <div className="max-w-3xl space-y-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 font-mono text-xs text-slate-700 dark:text-slate-300">
-            <FlaskConical className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span className="text-cyan-600 dark:text-cyan-400 font-semibold">AMITRAX PRODUCT LAB</span>
-            <span>// R&D & ECOSYSTEM</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display text-slate-900 dark:text-white tracking-tight">
-            Ideas become products <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-300 dark:via-sky-200 dark:to-purple-300">
-              when we build them.
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl font-body">
-            We explore problems, experiment with technology, and turn promising ideas into products people can actually use.
-          </p>
+    <div className="w-full pt-24 sm:pt-28">
+      <PageIntro icon={<Compass className="h-4 w-4" />} eyebrow="FROM THE STUDIO" title="Ideas made" highlight="tangible." accent="cyan" description="Two original concept explorations in content and useful tools. Self-initiated interface studies, not commissioned client projects or claims of measured results." />
+      <section aria-label="Studio concept explorations" className="studio-section !pt-5 sm:!pt-8">
+        <div className="studio-container space-y-16 sm:space-y-24">
+          {explorations.map((work, index) => (
+            <article key={work.id} aria-labelledby={`${work.id}-title`}>
+              <Reveal>
+                <figure className="overflow-hidden bg-[#10292d]">
+                  <img src={work.id === 'fieldnotes' ? fieldnotesUrl : daylightUrl} width="1200" height="900" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" alt={work.id === 'fieldnotes' ? 'Fieldnotes editorial website concept with a sculptural ochre sun and journal layout.' : 'Daylight planning application concept showing a weekly schedule and focus session.'} className="block h-auto w-full transition-transform duration-700 hover:scale-[1.02]" />
+                  <figcaption className="px-5 py-3 text-sm text-[#c4dddd]">Original local artwork · Responsive interface study</figcaption>
+                </figure>
+                <div className="mt-6 grid gap-5 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+                  <div>
+                    <p className="studio-kicker mb-3">0{index + 1} / STUDIO CONCEPT</p>
+                    <h2 id={`${work.id}-title`} className="font-display text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">{work.name}</h2>
+                    <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">{work.discipline}</p>
+                  </div>
+                  <div>
+                    <p className="studio-copy">{work.summary}</p>
+                    <details className="group mt-5 border-y border-slate-300/70 dark:border-white/15">
+                      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-5 py-3 font-medium text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600 dark:text-white [&::-webkit-details-marker]:hidden">
+                        Inside the exploration
+                        <span aria-hidden="true" className="text-xl text-cyan-700 group-open:hidden dark:text-cyan-300">+</span>
+                        <span aria-hidden="true" className="hidden text-xl text-cyan-700 group-open:inline dark:text-cyan-300">−</span>
+                      </summary>
+                      <div className="space-y-5 pb-6 pt-2">
+                        <div><h3 className="font-semibold text-slate-950 dark:text-white">The question</h3><p className="studio-copy mt-2">{work.question}</p></div>
+                        <div><h3 className="font-semibold text-slate-950 dark:text-white">Design decisions</h3><p className="studio-copy mt-2">{work.decisions}</p></div>
+                        <div><h3 className="font-semibold text-slate-950 dark:text-white">Prototype boundaries</h3><p className="studio-copy mt-2">{work.next}</p></div>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </Reveal>
+            </article>
+          ))}
         </div>
-
-        {/* Featured Product Experience (Shown when available and unfiltered) */}
-        {featuredProduct && selectedCategory === 'All' && selectedStatus === 'All' && !searchQuery && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
-                SPOTLIGHT INITIATIVE
-              </span>
-              <span>LIFECYCLE TIER 01</span>
-            </div>
-            <FeaturedProductExperience product={featuredProduct} />
+      </section>
+      <section className="studio-section bg-slate-100/70 dark:bg-white/[0.025]">
+        <Reveal className="studio-container flex flex-col items-start justify-between gap-7 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            <p className="studio-kicker mb-4">YOUR NEXT PROJECT</p>
+            <h2 className="studio-title">What could we make useful for you?</h2>
+            <p className="studio-copy mt-4">Bring a real problem. We’ll help shape a clear direction and a practical first step.</p>
           </div>
-        )}
-
-        {/* Filter & Controls Bar */}
-        <div className="space-y-6 pt-4 border-t border-slate-200 dark:border-white/10">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold font-display text-slate-900 dark:text-white">
-                All Products & Lab Initiatives
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                Explore technology transitioning from initial mathematical hypotheses to production software.
-              </p>
-            </div>
-
-            {/* Ecosystem Topology Toggle */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowEcosystemGraph(!showEcosystemGraph)}
-                className={`px-4 py-2 rounded-xl text-xs font-mono font-medium border transition-all flex items-center gap-2 cursor-pointer ${
-                  showEcosystemGraph
-                    ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border-cyan-500/40 shadow-lg shadow-cyan-500/10'
-                    : 'bg-white dark:bg-white/4 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 dark:hover:border-white/20 hover:border-slate-300'
-                }`}
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                <span>{showEcosystemGraph ? 'Hide Graph' : 'Ecosystem Topology'}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Ecosystem Graph Accordion */}
-          {showEcosystemGraph && (
-            <div>
-              <ProductEcosystemVisualization />
-            </div>
-          )}
-
-          {/* Filtering Controls */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#080d1e] border border-slate-200 dark:border-white/10 space-y-4 shadow-sm dark:shadow-xl">
-            {/* Search Field */}
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Search Product Lab:
-              </span>
-              <div className="relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by name, code name, or tagline…"
-                  aria-label="Search products by name, code name, or tagline"
-                  className="w-full pl-9 pr-4 py-2 rounded-lg text-sm bg-white dark:bg-white/4 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Category Pills */}
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Filter by Category:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {allCategories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    aria-pressed={selectedCategory === cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                      selectedCategory === cat
-                        ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-500/40 font-semibold'
-                        : 'bg-slate-50 dark:bg-white/3 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/5 dark:hover:text-white dark:hover:border-white/10 hover:text-slate-900 hover:border-slate-300'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Status Pills */}
-            <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/5">
-              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Filter by Lifecycle Status:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {allStatuses.map((st) => (
-                  <button
-                    key={st}
-                    type="button"
-                    aria-pressed={selectedStatus === st}
-                    onClick={() => setSelectedStatus(st)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase transition-all ${
-                      selectedStatus === st
-                        ? 'bg-blue-600/30 text-blue-700 dark:text-blue-200 border border-blue-400/40 font-semibold'
-                        : 'bg-slate-50 dark:bg-white/3 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/5 dark:hover:text-white dark:hover:border-white/10 hover:text-slate-900 hover:border-slate-300'
-                    }`}
-                  >
-                    {st === 'All' ? 'All Statuses' : st.replace('-', ' ')}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Product Grid or Empty State */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <ProductLabEmptyState
-            filteredMessage={
-              searchQuery.trim()
-                ? `No products matched “${searchQuery.trim()}”.`
-                : `No products found matching category "${selectedCategory}" and status "${selectedStatus}".`
-            }
-            onResetFilter={handleResetFilters}
-          />
-        )}
-      </div>
+          <ButtonLink to="/contact" size="lg" className="shrink-0" iconRight={<ArrowUpRight className="h-4 w-4" />}>Start a conversation</ButtonLink>
+        </Reveal>
+      </section>
     </div>
   );
 };

@@ -1,69 +1,36 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ContactSection } from '../components/sections/ContactSection';
-import { MessageSquare } from 'lucide-react';
+import { PageIntro } from '../components/ui/PageIntro';
+import { Reveal } from '../components/motion/Reveal';
+import { ContactConversationArtwork } from '../components/contact/ContactConversationArtwork';
 
-export const ContactPage: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  return (
-    <div className="w-full pt-28 pb-16">
-      {/* Page Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-semibold">
-            <MessageSquare className="w-3.5 h-3.5" />
-            <span>START A CONVERSATION</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display text-slate-900 dark:text-white tracking-tight leading-tight">
-            Contact & <span className="gradient-text-cyan">Inquiries</span>
-          </h1>
-
-          <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
-            Have a problem worth solving or looking to architect a new digital system? Reach out to start an open, practical discussion.
-          </p>
-        </div>
+export const ContactPage: React.FC = () => (
+  <div className="w-full pt-28">
+    <PageIntro icon={null} eyebrow="CONTACT" title="Let’s make" highlight="a start." accent="cyan" description="An idea, a challenge, a fresh perspective. Tell us what you have in mind." />
+    <section className="studio-section pt-0" aria-labelledby="contact-start-heading">
+      <div className="studio-container grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr] lg:gap-16">
+        <Reveal>
+          <ContactConversationArtwork />
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="studio-kicker mb-4">START WITH THE THREAD</p>
+          <h2 id="contact-start-heading" className="studio-title">Bring the question.<br />We’ll find the shape.</h2>
+          <p className="studio-copy mt-5">You do not need a finished brief or a perfect answer. A useful first conversation is enough to understand what is getting in the way and what a better next step could look like.</p>
+          <ol className="mt-7 space-y-4 border-t border-slate-300/70 pt-2 dark:border-white/15">
+            {[
+              ['01', 'Context', 'What is happening now, and who needs it to work better?'],
+              ['02', 'Clarity', 'What should the experience make easier to understand or do?'],
+              ['03', 'Direction', 'What is the most useful thing to explore together first?'],
+            ].map(([number, title, copy]) => (
+              <li key={number} className="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-300/70 py-4 dark:border-white/15">
+                <span className="pt-1 text-sm text-cyan-700 dark:text-cyan-300">{number}</span>
+                <div><h3 className="font-display text-lg font-semibold text-slate-950 dark:text-white">{title}</h3><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{copy}</p></div>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
       </div>
-
-      {/* Main Interactive Contact Section */}
-      <ContactSection />
-
-      {/* Engagement Expectations & FAQ */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-        <div className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#080d1e]/80 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md">
-          <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white mb-6">
-            What to expect when reaching out
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-600 dark:text-slate-300">
-            <div className="p-5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 space-y-2">
-              <span className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 block">STEP 01</span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Direct Review</h4>
-              <p className="text-xs leading-relaxed">
-                Your problem statement is reviewed directly by an engineer, not passed to a junior sales queue.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 space-y-2">
-              <span className="text-xs font-semibold text-blue-700 dark:text-blue-400 block">STEP 02</span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Feasibility Assessment</h4>
-              <p className="text-xs leading-relaxed">
-                We assess whether the problem is technically viable and if AmitraX is the optimal partner for your constraints.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 space-y-2">
-              <span className="text-xs font-semibold text-purple-700 dark:text-purple-400 block">STEP 03</span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Technical Roadmap</h4>
-              <p className="text-xs leading-relaxed">
-                If there is alignment, we schedule a focused architecture discovery session with concrete next steps.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+    </section>
+    <ContactSection />
+  </div>
+);

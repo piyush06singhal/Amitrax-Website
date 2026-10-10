@@ -12,6 +12,7 @@ export const AbstractTechFilmSection: React.FC = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let animId: number;
     let width = (canvas.width = canvas.parentElement?.clientWidth || 1200);
@@ -53,7 +54,7 @@ export const AbstractTechFilmSection: React.FC = () => {
     }
 
     const render = () => {
-      animId = requestAnimationFrame(render);
+      if (!prefersReducedMotion) animId = requestAnimationFrame(render);
 
       if (!isVisible) return;
 

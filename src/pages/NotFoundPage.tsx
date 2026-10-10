@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
+import { ArrowUpRight, Compass, SearchX } from 'lucide-react';
 import { ButtonLink } from '../components/ui/Button';
-import { ArrowUpRight, SearchX, Compass } from 'lucide-react';
-import { Logo } from '../components/ui/Logo';
+import { PageIntro } from '../components/ui/PageIntro';
+import { Reveal } from '../components/motion/Reveal';
 
-/**
- * AmitraX Branded 404 — This page doesn't exist.
- * Never expose technical routing errors; always a designed, calm escape.
- */
 export const NotFoundPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,60 +11,20 @@ export const NotFoundPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full pt-28 pb-28 relative overflow-hidden">
-      {/* Ambient brand glow */}
-      <div className="absolute top-16 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-24 right-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[170px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-2xl mx-auto text-center space-y-8">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-semibold shadow-sm dark:shadow-[0_0_15px_rgba(56,189,248,0.18)]">
-            <SearchX className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
-            <span>ERROR 404 — ROUTE NOT FOUND</span>
+    <div className="w-full pt-24 pb-20">
+      <PageIntro icon={<SearchX className="h-4 w-4" />} eyebrow="404 / NOT FOUND" title="A useful page" highlight="is elsewhere." accent="cyan" description="That route does not exist, but there are a few good places to continue exploring." />
+      <Reveal className="studio-container">
+        <div className="grid gap-8 border-y border-slate-300/70 py-10 dark:border-white/15 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p className="studio-kicker">Try a different direction</p>
+            <p className="studio-copy mt-3 max-w-xl">Explore the studio concepts, see what we can make, or return to the beginning and follow the thread from there.</p>
           </div>
-
-          {/* Wordmark mark */}
-          <div className="inline-flex items-center justify-center gap-3">
-            <Logo size="md" showSubline={false} />
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display text-slate-900 dark:text-white tracking-tight leading-tight">
-            This page{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-500 to-purple-600 dark:from-cyan-300 dark:via-sky-200 dark:to-purple-300">
-              doesn't exist.
-            </span>
-          </h1>
-
-          <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed max-w-lg mx-auto font-body">
-            The system couldn't find what you were looking for. The rest of the platform is
-            operational — let's get you back to it.
-          </p>
-
-          {/* Action group */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <ButtonLink
-              to="/"
-              variant="primary"
-              size="lg"
-              magnetic
-              iconRight={<ArrowUpRight className="w-4 h-4" />}
-            >
-              Return Home
-            </ButtonLink>
-
-            <ButtonLink
-              to="/products"
-              variant="secondary"
-              size="lg"
-              iconLeft={<Compass className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />}
-            >
-              Explore Product Lab
-            </ButtonLink>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink to="/" size="lg" iconRight={<ArrowUpRight className="h-4 w-4" />}>Return home</ButtonLink>
+            <ButtonLink to="/capabilities" variant="secondary" size="lg" iconLeft={<Compass className="h-4 w-4 text-cyan-600" />}>See what we build</ButtonLink>
           </div>
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 };

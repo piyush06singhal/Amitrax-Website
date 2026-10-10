@@ -1,12 +1,11 @@
 /**
- * AmitraX Services Configuration
- * Honest, capability-focused engineering services without pricing packages or artificial tiers.
+ * AmitraX services: practical digital work for growing businesses and teams.
  */
 
 export interface ServiceDetail {
   id: string;
   name: string;
-  category: 'Engineering' | 'Intelligence' | 'Platforms' | 'Design & Strategy';
+  category: 'Websites' | 'Web Apps' | 'Design' | 'Growth & Support';
   shortExplanation: string;
   typicalProblemsSolved: string;
   deliverables: string[];
@@ -16,147 +15,93 @@ export interface ServiceDetail {
 
 export const SERVICES: ServiceDetail[] = [
   {
-    id: 'product-development',
-    name: 'Product Development',
-    category: 'Engineering',
-    shortExplanation: 'Turning an initial idea into a working, maintainable, and scalable digital product.',
-    typicalProblemsSolved:
-      'Founders and teams have a compelling concept or operational need but lack the integrated product-engineering expertise to take it from zero to a reliable, deployed reality without cutting corners.',
-    deliverables: [
-      'Production-ready full-stack application',
-      'End-to-end component design system',
-      'Automated testing & CI/CD deployment pipeline',
-      'Comprehensive architectural documentation'
-    ],
-    technologies: ['React 19', 'Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS'],
+    id: 'website-design-development',
+    name: 'Website Design & Development',
+    category: 'Websites',
+    shortExplanation: 'Clear, modern websites that explain what you do and help the right people take action.',
+    typicalProblemsSolved: 'Your current site feels dated, is difficult to update, or does not make your value clear to potential customers.',
+    deliverables: ['Page structure and content direction', 'Responsive interface design', 'CMS or content editing setup', 'Launch-ready website'],
+    technologies: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Headless CMS'],
     accentColor: '#38bdf8'
   },
   {
-    id: 'web-development',
-    name: 'Web Development',
-    category: 'Engineering',
-    shortExplanation: 'Modern web applications and digital experiences engineered for real-world speed and responsiveness.',
-    typicalProblemsSolved:
-      'Existing websites are slow, difficult to update, fragmented across screen sizes, or fail to communicate value cleanly to modern users.',
-    deliverables: [
-      'Responsive, accessible multi-page web platform',
-      'Instant page transitions and fluid animations',
-      'Optimized Core Web Vitals (sub-second load)',
-      'Search engine and social sharing metadata foundation'
-    ],
-    technologies: ['TypeScript', 'Vite', 'Motion', 'Tailwind CSS', 'HTML5 Semantic Web'],
+    id: 'web-applications',
+    name: 'Web Applications',
+    category: 'Web Apps',
+    shortExplanation: 'Useful web apps and internal tools that make everyday work simpler for your team or customers.',
+    typicalProblemsSolved: 'Important work is spread across spreadsheets, email, and disconnected tools that were never designed for your process.',
+    deliverables: ['User flows and key screens', 'Role-based experiences', 'Forms, dashboards, and data views', 'A maintainable application foundation'],
+    technologies: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'API integrations'],
     accentColor: '#06b6d4'
   },
   {
-    id: 'software-engineering',
-    name: 'Software Engineering',
-    category: 'Engineering',
-    shortExplanation: 'Custom software systems built around specific business or institutional requirements.',
-    typicalProblemsSolved:
-      'Off-the-shelf software forces teams into awkward workarounds, lacks custom business rule validation, or struggles to integrate with existing legacy databases.',
-    deliverables: [
-      'Custom business logic engines and services',
-      'Deterministic state models and transaction flows',
-      'Strict type safety from database to interface',
-      'Thorough test suites for critical paths'
-    ],
-    technologies: ['TypeScript', 'Node.js', 'Go', 'PostgreSQL', 'Docker'],
+    id: 'custom-digital-products',
+    name: 'Custom Digital Products',
+    category: 'Web Apps',
+    shortExplanation: 'Purpose-built digital products for businesses with needs that an off-the-shelf tool cannot meet.',
+    typicalProblemsSolved: 'Your team has outgrown generic tools and needs a more thoughtful way to manage a customer, content, or operational journey.',
+    deliverables: ['Product scope and feature priorities', 'A focused first version', 'Connected data and workflows', 'A roadmap for future improvements'],
+    technologies: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Cloud hosting'],
     accentColor: '#3b82f6'
   },
   {
-    id: 'ai-intelligent-systems',
-    name: 'AI & Intelligent Systems',
-    category: 'Intelligence',
-    shortExplanation: 'AI-powered applications, intelligent workflows, and structured data automation.',
-    typicalProblemsSolved:
-      'Generic AI wrappers hallucinate, leak private data, or output unstructured responses that break downstream code. We build deterministic safeguards, RAG pipelines, and verifiable decision logs.',
-    deliverables: [
-      'Retrieval-augmented generation (RAG) vector pipelines',
-      'Strict schema enforcement and grammar constraints',
-      'Multimodal ingestion and structured document extraction',
-      'Security guardrails and privacy sanitization layers'
-    ],
-    technologies: ['Gemini Multimodal SDK', 'Vector Stores', 'Python', 'FastAPI', 'LangGraph'],
+    id: 'automation-integrations',
+    name: 'Automation & Integrations',
+    category: 'Growth & Support',
+    shortExplanation: 'Connected workflows that reduce repetitive admin and help your existing tools work together.',
+    typicalProblemsSolved: 'People spend too much time copying information between systems, chasing updates, or repeating work that could be handled automatically.',
+    deliverables: ['Workflow mapping', 'Form and email automations', 'Third-party service integrations', 'Clear handover and documentation'],
+    technologies: ['APIs', 'Webhooks', 'Zapier', 'Make', 'TypeScript'],
     accentColor: '#a855f7'
   },
   {
-    id: 'ui-ux-product-design',
-    name: 'UI/UX & Product Design',
-    category: 'Design & Strategy',
-    shortExplanation: 'Interfaces and experiences designed around usability, cognitive ergonomics, and real-world needs.',
-    typicalProblemsSolved:
-      'Dense technical tools overwhelm users with cluttered layouts, cryptic error states, and clunky navigation, driving up support costs and user frustration.',
-    deliverables: [
-      'Figma design systems with strict token hierarchy',
-      'Interactive click-through prototypes',
-      'High-contrast accessible theme palettes',
-      'Ergonomic workflow wireframes and journey maps'
-    ],
-    technologies: ['Figma', 'Design Tokens', 'Motion', 'Radix Primitives', 'WCAG AA Guidelines'],
+    id: 'ui-ux-brand-direction',
+    name: 'UI/UX & Brand Direction',
+    category: 'Design',
+    shortExplanation: 'A visual direction and user experience that feels like your business and is easy to navigate.',
+    typicalProblemsSolved: 'The business has strong ideas but an inconsistent visual identity, unclear messaging, or a confusing customer journey.',
+    deliverables: ['Sitemap and user journeys', 'Wireframes and visual direction', 'High-fidelity screen designs', 'A reusable design system'],
+    technologies: ['Figma', 'Design systems', 'Prototyping', 'Responsive design', 'Accessibility'],
     accentColor: '#ec4899'
   },
   {
-    id: 'backend-api-engineering',
-    name: 'Backend & API Engineering',
-    category: 'Platforms',
-    shortExplanation: 'Reliable application backends, APIs, integrations, and supporting data systems.',
-    typicalProblemsSolved:
-      'Backend services crash under load spikes, expose inconsistent endpoint schemas, suffer from N+1 query bottlenecks, or lack observability during outages.',
-    deliverables: [
-      'High-throughput REST and gRPC API endpoints',
-      'Optimized relational schemas and migration scripts',
-      'Sub-50ms caching layers with Redis',
-      'Interactive OpenAPI / Swagger documentation'
-    ],
-    technologies: ['Node.js', 'Express', 'Go', 'PostgreSQL', 'Redis', 'OpenAPI'],
+    id: 'website-refreshes',
+    name: 'Website Refreshes',
+    category: 'Websites',
+    shortExplanation: 'A focused redesign for a site that has good foundations but no longer represents the business well.',
+    typicalProblemsSolved: 'Your website has useful content, but its structure, visual language, and mobile experience need a considered update.',
+    deliverables: ['Content and page audit', 'Updated navigation and layout', 'Modern visual treatment', 'Staged redesign or full rebuild'],
+    technologies: ['React', 'Figma', 'Content strategy', 'SEO basics', 'Analytics'],
     accentColor: '#10b981'
   },
   {
-    id: 'automation-solutions',
-    name: 'Workflow & Process Automation',
-    category: 'Engineering',
-    shortExplanation: 'Workflow automation and technology solutions designed to reduce manual repetitive processes.',
-    typicalProblemsSolved:
-      'Team members spend hours every week copying data across disconnected systems, manually re-entering records, and troubleshooting human typos.',
-    deliverables: [
-      'Event-driven background job consumers',
-      'Bi-directional webhook integration buses',
-      'Dead-letter queue retry mechanisms',
-      'Executive operational status dashboards'
-    ],
-    technologies: ['Temporal.io', 'BullMQ', 'Serverless Queues', 'Webhooks', 'TypeScript'],
+    id: 'launch-support',
+    name: 'Launch & Ongoing Support',
+    category: 'Growth & Support',
+    shortExplanation: 'Practical help after launch, from content updates to improvements that keep the site useful.',
+    typicalProblemsSolved: 'The site is live but needs a reliable partner for updates, new pages, fixes, and thoughtful next steps.',
+    deliverables: ['Launch checks and handover', 'Content and design updates', 'Performance and accessibility checks', 'A prioritised improvement backlog'],
+    technologies: ['Analytics', 'Content updates', 'Accessibility', 'Performance', 'Documentation'],
     accentColor: '#14b8a6'
   },
   {
-    id: 'cloud-infrastructure',
-    name: 'Cloud & Infrastructure',
-    category: 'Platforms',
-    shortExplanation: 'Scalable deployment and infrastructure architecture engineered for resilience.',
-    typicalProblemsSolved:
-      'Unpredictable cloud bills, fragile deployment scripts, lack of rollback mechanisms, and zero monitoring when services degrade.',
-    deliverables: [
-      'Infrastructure as Code (Terraform / Manifests)',
-      'Containerized deployment pipelines',
-      'Distributed tracing and alerting monitors',
-      'Disaster recovery and zero-downtime rollback runbooks'
-    ],
-    technologies: ['Google Cloud Run', 'Docker', 'Terraform', 'Prometheus', 'OpenTelemetry'],
+    id: 'digital-direction',
+    name: 'Digital Direction',
+    category: 'Design',
+    shortExplanation: 'A practical plan for improving your digital presence when you know something needs to change but not where to begin.',
+    typicalProblemsSolved: 'There are too many ideas, competing priorities, or unclear feedback about what the next investment should be.',
+    deliverables: ['Current-state review', 'Opportunity and priority map', 'Recommended next steps', 'A realistic phased plan'],
+    technologies: ['Workshops', 'Content audits', 'Customer journeys', 'Prototyping', 'Roadmapping'],
     accentColor: '#6366f1'
   },
   {
-    id: 'technology-consulting',
-    name: 'Technology Consulting',
-    category: 'Design & Strategy',
-    shortExplanation: 'Technical exploration, architecture audits, feasibility analysis, and product direction.',
-    typicalProblemsSolved:
-      'Founders and technical leads face critical architectural decisions—such as build vs. buy, database selection, or framework migrations—and need objective, vendor-neutral engineering advice.',
-    deliverables: [
-      'Comprehensive architectural audit & debt assessment',
-      'Pragmatic technical feasibility reports',
-      'Vendor-neutral technology stack recommendations',
-      'Actionable phased engineering roadmap'
-    ],
-    technologies: ['Architecture Blueprints', 'Threat Modeling', 'Cost Analysis', 'RFC Frameworks'],
+    id: 'content-seo',
+    name: 'Content & SEO Foundations',
+    category: 'Growth & Support',
+    shortExplanation: 'A clearer content structure so people can find, understand, and trust your business online.',
+    typicalProblemsSolved: 'Your website has pages, but the words, structure, and search basics are not helping the right visitors find their way through it.',
+    deliverables: ['Page and content recommendations', 'Search-friendly page structure', 'Metadata and sharing setup', 'Editorial guidance for your team'],
+    technologies: ['Content strategy', 'SEO basics', 'Analytics', 'Semantic HTML', 'CMS'],
     accentColor: '#f59e0b'
   }
 ];

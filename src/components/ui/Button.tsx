@@ -110,7 +110,7 @@ interface ButtonLinkProps {
 /**
  * Renders primary/secondary button styling on a router <Link> for internal
  * paths, or an <a target="_blank"> for external/absolute URLs. Fixes the
- * invalid nested <a><button> pattern and the ProductDetailPage latent bug
+ * invalid nested <a><button> pattern from the retired product-lab flow
  * of passing absolute URLs to react-router <Link>.
  */
 export const ButtonLink: React.FC<ButtonLinkProps> = ({

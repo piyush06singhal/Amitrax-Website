@@ -36,7 +36,7 @@ export const Logo: React.FC<LogoProps> = ({
 
       {showSubline && (
         <span className="font-mono text-[9px] text-slate-500 dark:text-slate-400 tracking-widest uppercase pl-4.5 mt-0.5">
-          ENGINEERING SYSTEMS
+          DIGITAL STUDIO
         </span>
       )}
     </div>

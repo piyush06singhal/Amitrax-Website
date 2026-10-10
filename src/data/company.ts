@@ -5,22 +5,22 @@
 
 export const COMPANY_IDENTITY = {
   name: 'AmitraX',
-  tagline: 'Technology, built with purpose.',
-  headline: 'We build modern digital products that solve real-world problems.',
+  tagline: 'Digital work, built with purpose.',
+  headline: 'We help businesses show up better online.',
   positioning:
-    'AmitraX is an early-stage technology company focused on building modern software, intelligent systems, and scalable digital infrastructure. We combine disciplined software engineering, product thinking, and thoughtful design to turn ambitious ideas into practical, reliable digital solutions.',
-  philosophy: 'Technology should not simply be built. It should be built with purpose.',
+    'AmitraX is a small digital studio creating websites, web applications, and useful online experiences for businesses and teams. We combine clear thinking, thoughtful design, and dependable development to turn ideas into work people can use.',
+  philosophy: 'Digital work should make things clearer, easier, and more useful.',
   philosophySubtext:
-    'We reject technology for novelty’s sake. Every line of code, every architectural choice, and every interface interaction must trace directly to solving a tangible constraint or human friction point.',
+    'We do not add complexity for its own sake. Every page, feature, and interaction should help your customers or your team do something better.',
   foundedYear: '2026',
-  status: 'Active Engineering Studio',
+  status: 'Independent Digital Studio',
   contactEmail: 'amitbouddh595@gmail.com',
-  location: 'Global Digital Studio',
+  location: 'Working with clients remotely',
 };
 
 export const COMPANY_STORY = {
   headline: 'How AmitraX Began',
-  subheadline: 'Turning ambitious ideas into practical, enduring technology.',
+  subheadline: 'Turning ambitious ideas into clear, useful digital experiences.',
   narrative: [
     'AmitraX was started with a single, straightforward conviction: software exists to remove operational and human friction, not to generate unnecessary complexity.',
     'Too much modern technology is bloated, over-engineered, or abandoned at the prototype phase. We set out to build an early, agile, and technically rigorous technology studio where product thinking, engineering discipline, and modern interface design operate as one unified practice.',
@@ -31,35 +31,35 @@ export const COMPANY_STORY = {
       step: '01',
       phase: 'Problem',
       title: 'Isolate the Friction',
-      description: 'Every meaningful project starts by pinpointing where users or organizations waste time, lose momentum, or hit a wall.',
+      description: 'Every meaningful project starts by understanding what people need, where they get stuck, and what the business is trying to achieve.',
       accent: '#f43f5e'
     },
     {
       step: '02',
       phase: 'Idea',
-      title: 'Formulate the Solution',
-      description: 'We translate raw needs into an elegant, coherent product vision grounded in realistic feasibility.',
+      title: 'Shape the Solution',
+      description: 'We translate the brief into a focused direction for the pages, content, and functionality.',
       accent: '#f59e0b'
     },
     {
       step: '03',
       phase: 'Build',
-      title: 'Engineer with Precision',
-      description: 'We build production-ready systems using type safety, resilient architecture, and responsive interfaces.',
+      title: 'Design & Build',
+      description: 'We turn the direction into a polished, responsive experience that works across devices.',
       accent: '#38bdf8'
     },
     {
       step: '04',
       phase: 'Learn',
-      title: 'Observe Real Usage',
-      description: 'We deploy to real environments, gather telemetry, and observe where users encounter cognitive friction.',
+      title: 'Launch & Listen',
+      description: 'We launch the work, gather useful feedback, and pay attention to what people actually need next.',
       accent: '#a855f7'
     },
     {
       step: '05',
       phase: 'Improve',
-      title: 'Iterate & Compound Value',
-      description: 'We optimize latency, refine workflows, and scale the system into an enduring digital asset.',
+      title: 'Improve Over Time',
+      description: 'We keep refining the experience as your business, content, and customers grow.',
       accent: '#10b981'
     }
   ]
@@ -71,12 +71,12 @@ export const WHO_WE_BUILD_FOR = [
     title: 'Businesses & Enterprises',
     tagline: 'Operational leverage through modern software',
     description:
-      'We architect custom digital products, internal workflow tools, customer-facing platforms, and intelligent automation systems that streamline operations, eliminate manual toil, and scale seamlessly.',
+      'We create websites, web applications, internal tools, and connected workflows that make day-to-day work clearer and easier.',
     typicalNeeds: [
-      'Customer-facing digital platforms',
-      'Complex workflow & pipeline automation',
-      'API integrations & data reconciliation',
-      'Modern web applications replacing legacy software'
+      'Customer-facing websites and web apps',
+      'Clearer internal workflows',
+      'Useful integrations between existing tools',
+      'Modern experiences replacing outdated ones'
     ],
     accentColor: '#38bdf8'
   },
@@ -85,26 +85,26 @@ export const WHO_WE_BUILD_FOR = [
     title: 'Institutions & Organizations',
     tagline: 'Reliable, accessible systems built for long-term stewardship',
     description:
-      'We engineer stable digital infrastructure and secure platforms designed around complex multi-stakeholder workflows, institutional compliance, and strict accessibility standards.',
+      'We create clear, accessible websites and useful digital tools for organisations with multiple audiences and moving parts.',
     typicalNeeds: [
       'Secure multi-tier access platforms',
       'Auditable data management systems',
       'WCAG AA accessible public interfaces',
-      'High-uptime, maintainable infrastructure'
+      'Clear, maintainable digital foundations'
     ],
     accentColor: '#3b82f6'
   },
   {
     id: 'startups',
     title: 'Startups & Founders',
-    tagline: 'Turning early-stage visions into production-grade reality',
+    tagline:     'Turning early-stage visions into useful digital experiences',
     description:
-      'We partner with ambitious founders to engineer high-velocity MVPs, scalable foundations, and rapid interactive prototypes that validate product-market fit without accumulating crippling technical debt.',
+      'We partner with ambitious founders to shape focused first versions, polished landing pages, and practical tools that help them learn and grow.',
     typicalNeeds: [
-      'Zero-to-one MVP software development',
-      'Scalable cloud architecture & database modeling',
-      'Rapid prototype validation & user testing',
-      'High-conversion, polished product landing surfaces'
+      'First-version website or web app',
+      'Clear product and content direction',
+      'Rapid prototype validation',
+      'Polished launch-ready pages'
     ],
     accentColor: '#a855f7'
   },
@@ -113,12 +113,12 @@ export const WHO_WE_BUILD_FOR = [
     title: 'Everyday Digital Users',
     tagline: 'Software that respects human attention and intent',
     description:
-      'Above all, every product we build is designed for the human being using it. We build software that loads instantly, works intuitively, and respects cognitive bandwidth.',
+      'Above all, every experience we build is designed for the person using it. We aim for clear content, intuitive flows, and less unnecessary friction.',
     typicalNeeds: [
-      'Sub-millisecond tactile responsiveness',
-      'Intuitive, self-explanatory workflows',
-      'Zero clutter, dark-mode & accessible ergonomics',
-      'Consistent performance across desktop, tablet, and mobile'
+      'Clear, self-explanatory journeys',
+      'Comfortable mobile experiences',
+      'Readable content and useful feedback',
+      'Consistent layouts across devices'
     ],
     accentColor: '#10b981'
   }

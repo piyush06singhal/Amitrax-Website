@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="840" viewBox="0 0 900 840" fill="none">
+  <defs>
+    <linearGradient id="arch" x1="210" y1="120" x2="730" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#bbfbef"/><stop offset=".34" stop-color="#4bc9d3"/><stop offset=".66" stop-color="#12788a"/><stop offset="1" stop-color="#103846"/></linearGradient>
+    <linearGradient id="edge" x1="340" y1="220" x2="620" y2="560" gradientUnits="userSpaceOnUse"><stop stop-color="#10343c"/><stop offset="1" stop-color="#4dced1"/></linearGradient>
+    <linearGradient id="glass" x1="200" y1="280" x2="760" y2="660" gradientUnits="userSpaceOnUse"><stop stop-color="#153943"/><stop offset="1" stop-color="#081a24"/></linearGradient>
+    <linearGradient id="floor" x1="500" y1="500" x2="500" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#40b3c1" stop-opacity=".2"/><stop offset="1" stop-color="#40b3c1" stop-opacity="0"/></linearGradient>
+    <radialGradient id="light"><stop stop-color="#258594" stop-opacity=".35"/><stop offset="1" stop-color="#258594" stop-opacity="0"/></radialGradient>
+  </defs>
+  <ellipse cx="505" cy="405" rx="390" ry="375" fill="url(#light)"/>
+  <path d="M110 654l427-235 350 186-420 230z" fill="url(#floor)"/>
+  <g stroke="#6fe3e3" stroke-opacity=".13"><path d="M74 647l461-259 365 193M22 710l507-283 371 196M94 774l447-250 354 174M167 831l436-244M232 535l444 241M318 483l444 241M405 441l444 241"/></g>
+  <path d="M279 518V274c0-127 86-217 203-189s224 136 224 265v235l-89 47V357c0-80-59-159-128-178s-122 30-122 109v280z" fill="#0b4554"/>
+  <path d="M233 543V299c0-127 86-217 203-189s224 136 224 265v235l-90 47V382c0-80-59-159-128-178s-122 30-122 109v276z" fill="url(#arch)"/>
+  <path d="M320 589V313c0-79 53-128 122-109s128 98 128 178v275l47-25V357c0-80-59-159-128-178s-122 30-122 109v276z" fill="url(#edge)"/>
+  <path d="M234 544V299c0-127 86-217 203-189" stroke="#d1fff6" stroke-opacity=".7"/>
+  <g transform="matrix(.94 .25 -.08 .93 107 205)">
+    <rect x="40" y="106" width="544" height="334" rx="12" fill="#030c12" opacity=".5" transform="translate(16 22)"/>
+    <rect x="40" y="106" width="544" height="334" rx="12" fill="url(#glass)" stroke="#7ee0e1" stroke-opacity=".5"/>
+    <path d="M40 146h544" stroke="#99e9e3" stroke-opacity=".2"/>
+    <circle cx="62" cy="127" r="3" fill="#73dfe0"/><circle cx="75" cy="127" r="3" fill="#73dfe0" opacity=".5"/><circle cx="88" cy="127" r="3" fill="#73dfe0" opacity=".25"/>
+    <text x="74" y="189" fill="#a9e6e2" font-family="Arial,sans-serif" font-size="10" letter-spacing="3">THE SHAPE OF AN IDEA</text>
+    <text x="72" y="244" fill="#f2f4eb" font-family="Arial,sans-serif" font-size="46" letter-spacing="-2">Less noise.</text><text x="72" y="294" fill="#f2f4eb" font-family="Arial,sans-serif" font-size="46" letter-spacing="-2">More meaning.</text>
+    <path d="M74 320h161M74 333h120" stroke="#a8bfc5" stroke-width="3"/>
+    <rect x="74" y="367" width="123" height="33" rx="3" fill="#94ede1"/><text x="87" y="388" fill="#10313a" font-family="Arial,sans-serif" font-size="11">Explore the idea ↗</text>
+    <g transform="translate(375 190)"><path d="M0 159V75a68 68 0 0 1 136 0v84H95V76a27 27 0 0 0-54 0v83z" fill="#74d8d2"/><path d="M0 174h136" stroke="#74d8d2" stroke-opacity=".3"/><circle cx="68" cy="198" r="3" fill="#74d8d2"/></g>
+  </g>
+  <g transform="matrix(.94 .25 -.08 .93 591 492)"><rect width="149" height="186" rx="9" fill="#e8eee6"/><rect x="13" y="14" width="123" height="88" rx="3" fill="#145460"/><path d="M45 82V55a29 29 0 0 1 58 0v27H89V55a15 15 0 0 0-30 0v27z" fill="#87e6db"/><path d="M17 122h88M17 135h62" stroke="#183d45" stroke-width="4"/><rect x="17" y="151" width="71" height="18" rx="2" fill="#aac9be"/></g>
+  <path d="M666 151h55m-27-27v55M153 542h22m-11-11v22" stroke="#83e4dc" stroke-opacity=".6"/>
+</svg>

@@ -66,7 +66,7 @@
     --atx-emerald-glow: rgba(16, 185, 129, 0.25);
   }
 
-  html {
+html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
     background-color: var(--atx-bg);
@@ -94,6 +94,87 @@
       radial-gradient(ellipse 60% 40% at 85% 60%, rgba(59, 130, 246, 0.07), transparent),
       radial-gradient(ellipse 60% 40% at 15% 40%, rgba(168, 85, 247, 0.06), transparent);
   }
+}
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #54d6dc, #8ce8dc 48%, #c2f1dc);
+  box-shadow: 0 0 14px rgba(84, 214, 220, .8);
+  pointer-events: none;
+}
+
+/* Shared editorial studio primitives used by the page-level compositions. */
+.studio-container {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+}
+
+.studio-section {
+  padding-block: clamp(4.5rem, 9vw, 9rem);
+}
+
+.studio-kicker {
+  margin: 0;
+  color: #17747b;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .13em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.dark .studio-kicker { color: #83d6d1; }
+
+.studio-title {
+  margin: 0;
+  color: #15282b;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -.055em;
+  line-height: 1.04;
+}
+
+.dark .studio-title { color: #edf3ef; }
+
+.studio-copy {
+  color: #52676a;
+  font-size: clamp(1rem, .3vw + .92rem, 1.14rem);
+  line-height: 1.8;
+}
+
+.dark .studio-copy { color: #b5c9c9; }
+
+.studio-rule { border-color: rgba(22, 67, 70, .2); }
+.dark .studio-rule { border-color: rgba(190, 236, 231, .16); }
+
+.studio-reveal {
+  opacity: 0;
+  transform: translateY(1.5rem) scale(.985);
+  filter: blur(4px);
+  transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1), filter .8s ease;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.studio-reveal.is-visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+
+.site-footer a, .site-footer button { transition: color .25s ease, opacity .25s ease, transform .25s cubic-bezier(.16,1,.3,1); }
+.site-footer a:hover, .site-footer button:hover { transform: translateY(-1px); }
+
+@media (max-width: 640px) {
+  .studio-container { width: min(100% - 2rem, 80rem); }
+  .studio-section { padding-block: 4.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-reveal { opacity: 1; transform: none; filter: none; transition: none; }
+  .scroll-progress { display: none; }
 }
 
 ::selection {
@@ -171,6 +252,64 @@
   border-color: var(--atx-border-accent);
   box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.08), 0 0 24px -6px var(--atx-cyan-glow);
   transform: translateY(-2px);
+}
+
+@keyframes atx-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes atx-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-9px) rotate(1deg); }
+}
+
+@keyframes atx-shimmer {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
+.atx-reveal {
+  opacity: 0;
+  animation: atx-rise .7s cubic-bezier(.16, 1, .3, 1) forwards;
+  animation-delay: var(--atx-delay, 0ms);
+}
+
+.atx-interactive-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s ease, border-color .35s ease, background-color .35s ease;
+}
+
+.atx-interactive-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,.16) 48%, transparent 68%);
+  transform: translateX(-120%);
+  transition: transform .8s ease;
+  pointer-events: none;
+}
+
+.atx-interactive-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 20px 42px -20px rgba(2, 132, 199, .42);
+}
+
+.atx-interactive-card:hover::after {
+  transform: translateX(120%);
+}
+
+.atx-float {
+  animation: atx-float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atx-reveal { opacity: 1; animation: none; }
+  .atx-float { animation: none; }
+  .atx-interactive-card, .atx-interactive-card::after { transition: none; }
 }
 
 .atx-page-shell {

@@ -397,7 +397,7 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
     let fps = 60;
     let isLooping = false;
     const startLoop = () => {
-      if (isLooping || !isVisible) return;
+      if (isLooping || !isVisible || prefersReducedMotion) return;
       isLooping = true;
       frameId = requestAnimationFrame(animate);
     };
@@ -503,7 +503,11 @@ export const HeroScene: React.FC<HeroSceneProps> = () => {
       renderer.render(scene, camera);
     };
 
-    startLoop();
+    if (prefersReducedMotion) {
+      renderer.render(scene, camera);
+    } else {
+      startLoop();
+    }
 
     // ==========================================
     // 7. CLEANUP

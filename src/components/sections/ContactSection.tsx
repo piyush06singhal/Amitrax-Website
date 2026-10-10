@@ -1,45 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { COMPANY_IDENTITY } from '../../data/companyData';
 import { Button } from '../ui/Button';
-import { Send, CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface ContactFormData {
   fullName: string;
   email: string;
   organization: string;
-  inquiryType: 'General inquiry' | 'Project discussion' | 'Technical collaboration' | 'Joining / Careers';
+  inquiryType: 'General inquiry' | 'Project discussion' | 'Design collaboration' | 'Joining / Careers';
   problemStatement: string;
 }
-
 type SubmitState = 'idle' | 'sending' | 'success' | 'error';
-
-const EMPTY_FORM: ContactFormData = {
-  fullName: '',
-  email: '',
-  organization: '',
-  inquiryType: 'Project discussion',
-  problemStatement: '',
-};
+type FieldErrors = Partial<Record<keyof ContactFormData, string>>;
+const EMPTY_FORM: ContactFormData = { fullName: '', email: '', organization: '', inquiryType: 'Project discussion', problemStatement: '' };
+const INQUIRY_OPTIONS: ContactFormData['inquiryType'][] = ['Project discussion', 'Design collaboration', 'General inquiry', 'Joining / Careers'];
+const INPUT_CLASS = 'w-full min-w-0 rounded-lg border border-slate-300 bg-white/70 px-4 py-3 text-base text-slate-950 outline-none transition-colors focus:border-cyan-600 focus:ring-2 focus:ring-cyan-600/20 aria-[invalid=true]:border-rose-600 dark:border-white/20 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300';
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState<ContactFormData>(EMPTY_FORM);
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const formRef = useRef<HTMLFormElement>(null);
+  const successRef = useRef<HTMLHeadingElement>(null);
+  const submittingRef = useRef(false);
 
-  const inquiryOptions: ('General inquiry' | 'Project discussion' | 'Technical collaboration' | 'Joining / Careers')[] = [
-    'Project discussion',
-    'Technical collaboration',
-    'General inquiry',
-    'Joining / Careers',
-  ];
+  useEffect(() => { if (submitState === 'success') successRef.current?.focus(); }, [submitState]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.fullName || !formData.email || !formData.problemStatement) return;
-
+  const update = (field: keyof ContactFormData, value: string) => {
+    setFormData(previous => ({ ...previous, [field]: value }));
+    setErrors(previous => ({ ...previous, [field]: undefined }));
+  };
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submittingRef.current) return;
+    const nextErrors: FieldErrors = {};
+    if (!formData.fullName.trim()) nextErrors.fullName = 'Please enter your name.';
+    if (!formData.email.trim()) nextErrors.email = 'Please enter your email address.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) || formRef.current?.querySelector<HTMLInputElement>('#contact-email')?.validity.typeMismatch) nextErrors.email = 'Please enter a valid email address.';
+    if (!formData.problemStatement.trim()) nextErrors.problemStatement = 'Please share a little about your inquiry.';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) {
+      const firstField = Object.keys(nextErrors)[0];
+      formRef.current?.querySelector<HTMLElement>(`[name="${firstField}"]`)?.focus();
+      return;
+    }
+    submittingRef.current = true;
     setSubmitState('sending');
     setErrorMsg('');
-
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -47,226 +55,56 @@ export const ContactSection: React.FC = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) throw new Error(data?.error || 'There was a problem sending your message.');
+      if (!res.ok) throw new Error(data?.error || 'We could not confirm your submission.');
       setSubmitState('success');
-    } catch (err) {
+    } catch (error) {
       setSubmitState('error');
-      setErrorMsg(err instanceof Error ? err.message : 'There was a problem sending your message.');
+      setErrorMsg(error instanceof Error ? error.message : 'We could not confirm your submission.');
+    } finally {
+      submittingRef.current = false;
     }
   };
 
-  const resetForm = () => {
-    setFormData(EMPTY_FORM);
-    setSubmitState('idle');
-    setErrorMsg('');
-  };
+  const fieldError = (field: keyof ContactFormData) => errors[field] ? <p id={`contact-${field}-error`} className="mt-2 text-sm text-rose-700 dark:text-rose-300">{errors[field]}</p> : null;
 
   return (
-    <section id="contact" className="relative w-full py-20 lg:py-28 bg-white dark:bg-[#04060d] border-t border-slate-200 dark:border-white/5">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-cyan-500/5 blur-[120px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Note: page hero on /contact provides the section heading */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Direct channels and communication philosophy (5 cols) */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#080d1e]/90 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md space-y-4">
-              <span className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider block">
-                Direct Contact Channel
-              </span>
-              <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Direct inquiries & project briefs:</p>
-                <a
-                  href={`mailto:${COMPANY_IDENTITY.contactEmail}`}
-                  className="text-lg sm:text-xl font-bold font-display text-slate-900 dark:text-white dark:hover:text-cyan-300 hover:text-cyan-700 transition-colors flex items-center gap-2"
-                >
-                  <Mail className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
-                  <span>{COMPANY_IDENTITY.contactEmail}</span>
-                </a>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-2 border-t border-slate-200 dark:border-white/5">
-                We review technical briefs directly. No marketing spam, automated sales funnels, or commission-based agents.
-              </p>
+    <section id="contact" className="studio-section border-t border-slate-900/10 dark:border-white/10">
+      <div className="studio-container grid items-start gap-12 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:gap-20">
+        <div className="min-w-0">
+          <div role="status" aria-live="polite" className="sr-only">{submitState === 'sending' ? 'Submitting your inquiry…' : submitState === 'success' ? 'Your inquiry has been accepted by the website.' : ''}</div>
+          {submitState === 'success' ? (
+            <div className="py-8">
+              <CheckCircle2 size={36} className="mb-6 text-cyan-700 dark:text-cyan-300" aria-hidden="true" />
+              <h2 ref={successRef} tabIndex={-1} className="font-display text-3xl text-slate-950 outline-none dark:text-white">Thank you, {formData.fullName}.</h2>
+              <p className="studio-copy mt-4">Your inquiry has been accepted by the website. This confirmation does not verify email delivery. You can also reach us directly using the email address below.</p>
+              <button type="button" className="mt-6 min-h-11 text-base text-cyan-700 underline underline-offset-4 dark:text-cyan-300" onClick={() => { setFormData(EMPTY_FORM); setSubmitState('idle'); setErrorMsg(''); setErrors({}); requestAnimationFrame(() => formRef.current?.querySelector<HTMLInputElement>('#contact-name')?.focus()); }}>Start another inquiry</button>
             </div>
-
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#080d1e]/90 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md space-y-3">
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Our Communication Commitment</span>
-              </h4>
-              <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
-                  <span>Direct engineer response within 24–48 hours.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
-                  <span>Honest technical feasibility assessment—we will tell you if we are not the right fit.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
-                  <span>Confidentiality guaranteed for problem statements and system diagrams.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Right Column: Inquiry Form (7 cols) */}
-          <div className="lg:col-span-7">
-            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-50 via-white to-white dark:from-[#090f24] dark:via-[#0a0f24]/90 dark:to-[#050914] border border-slate-200 dark:border-cyan-500/30 shadow-xl dark:shadow-2xl dark:backdrop-blur-xl">
-              {submitState === 'success' ? (
-                <div className="py-12 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white">
-                    Message Sent
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Thank you, {formData.fullName}. Your inquiry was delivered to our team inbox.
-                    We'll get back to you within 24–48 hours.
-                  </p>
-
-                  <div className="pt-4">
-                    <button
-                      type="button"
-                      onClick={resetForm}
-                      className="text-xs text-slate-500 dark:text-slate-400 dark:hover:text-cyan-300 hover:text-cyan-700 underline cursor-pointer"
-                    >
-                      Send another message
-                    </button>
-                  </div>
+          ) : (
+            <form ref={formRef} onSubmit={handleSubmit} noValidate aria-labelledby="contact-form-title" aria-busy={submitState === 'sending'} className="space-y-7">
+              <div><h2 id="contact-form-title" className="font-display text-2xl tracking-tight text-slate-950 dark:text-white">Tell us about it.</h2><p id="contact-required" className="mt-2 text-sm text-slate-600 dark:text-slate-400">Fields marked * are required.</p></div>
+              <fieldset disabled={submitState === 'sending'} className="min-w-0 space-y-7 disabled:opacity-70">
+                <fieldset className="min-w-0">
+                  <legend className="mb-3 text-base font-medium text-slate-900 dark:text-slate-100">What brings you here?</legend>
+                  <div className="grid gap-2 sm:grid-cols-2">{INQUIRY_OPTIONS.map(type => <label key={type} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-3 py-3 text-sm ${formData.inquiryType === type ? 'border-cyan-700 bg-cyan-700/5 text-slate-950 dark:border-cyan-300 dark:bg-cyan-300/5 dark:text-white' : 'border-slate-300 text-slate-700 dark:border-white/20 dark:text-slate-300'}`}><input type="radio" name="inquiryType" value={type} checked={formData.inquiryType === type} onChange={() => update('inquiryType', type)} className="size-4 shrink-0 accent-cyan-700 dark:accent-cyan-300" />{type}</label>)}</div>
+                </fieldset>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="min-w-0"><label htmlFor="contact-name" className="mb-2 block text-base font-medium text-slate-900 dark:text-slate-100">Your name *</label><input id="contact-name" name="fullName" autoComplete="name" required value={formData.fullName} onChange={e => update('fullName', e.target.value)} aria-invalid={!!errors.fullName} aria-describedby={errors.fullName ? 'contact-fullName-error' : undefined} className={INPUT_CLASS} />{fieldError('fullName')}</div>
+                  <div className="min-w-0"><label htmlFor="contact-email" className="mb-2 block text-base font-medium text-slate-900 dark:text-slate-100">Email address *</label><input id="contact-email" name="email" type="email" autoComplete="email" required value={formData.email} onChange={e => update('email', e.target.value)} aria-invalid={!!errors.email} aria-describedby={errors.email ? 'contact-email-error' : undefined} className={INPUT_CLASS} />{fieldError('email')}</div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">
-                      Start a Technical Conversation
-                    </h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
-                      Select the nature of your inquiry below:
-                    </p>
-                  </div>
-
-                  {/* Inquiry Type Radio / Pill selector */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {inquiryOptions.map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, inquiryType: type })}
-                        className={`p-2.5 rounded-xl text-xs font-medium transition-all text-center border cursor-pointer ${
-                          formData.inquiryType === type
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold border-cyan-400 shadow-sm'
-                            : 'bg-white dark:bg-white/[0.03] border-slate-300 dark:border-white/10 text-slate-600 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/[0.06]'
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block">
-                        Your Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        placeholder="e.g. Elena Rostova"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block">
-                        Work Email *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="elena@organization.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block">
-                      Organization / Company (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.organization}
-                      onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                      placeholder="e.g. Acme Research Labs or Independent"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block">
-                      Problem Statement or Project Description *
-                    </label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={formData.problemStatement}
-                      onChange={(e) => setFormData({ ...formData, problemStatement: e.target.value })}
-                      placeholder="What problem are you looking to solve? What are the key technical challenges, constraints, or goals?"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors resize-none leading-relaxed"
-                    />
-                  </div>
-
-                  {submitState === 'error' && (
-                    <div className="flex items-start gap-3 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30">
-                      <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-                      <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed">
-                        {errorMsg} If the email service is temporary unavailable, you can reach us directly at{' '}
-                        <a
-                          href={`mailto:${COMPANY_IDENTITY.contactEmail}`}
-                          className="underline font-semibold"
-                        >
-                          {COMPANY_IDENTITY.contactEmail}
-                        </a>
-                        .
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      We respond directly. No unsolicited marketing.
-                    </span>
-
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="md"
-                      disabled={submitState === 'sending'}
-                      iconRight={
-                        submitState === 'sending' ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Send className="w-4 h-4" />
-                        )
-                      }
-                    >
-                      {submitState === 'sending' ? 'Sending…' : 'Send Message'}
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
+                <div><label htmlFor="contact-organization" className="mb-2 block text-base font-medium text-slate-900 dark:text-slate-100">Organization <span className="font-normal text-slate-500 dark:text-slate-400">(optional)</span></label><input id="contact-organization" name="organization" autoComplete="organization" value={formData.organization} onChange={e => update('organization', e.target.value)} className={INPUT_CLASS} /></div>
+                <div><label htmlFor="contact-message" className="mb-2 block text-base font-medium text-slate-900 dark:text-slate-100">What do you have in mind? *</label><p id="contact-message-hint" className="mb-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">A brief outline is enough. Goals, timing, and any useful context are welcome.</p><textarea id="contact-message" name="problemStatement" required rows={5} value={formData.problemStatement} onChange={e => update('problemStatement', e.target.value)} aria-invalid={!!errors.problemStatement} aria-describedby={`contact-message-hint${errors.problemStatement ? ' contact-problemStatement-error' : ''}`} className={`${INPUT_CLASS} resize-y leading-relaxed`} />{fieldError('problemStatement')}</div>
+                <Button type="submit" size="lg" disabled={submitState === 'sending'} iconRight={<ArrowUpRight size={18} aria-hidden="true" />}>{submitState === 'sending' ? 'Submitting…' : 'Send inquiry'}</Button>
+              </fieldset>
+              {Object.keys(errors).some(key => errors[key as keyof ContactFormData]) && <p role="alert" className="text-sm text-rose-700 dark:text-rose-300">Please check the highlighted fields.</p>}
+              {submitState === 'error' && <div role="alert" className="border-l-2 border-rose-600 pl-4 text-base leading-relaxed text-rose-700 dark:text-rose-300"><p>{errorMsg} Your form details are still here.</p><p className="mt-2">You can also email <a className="break-all underline underline-offset-4" href={`mailto:${COMPANY_IDENTITY.contactEmail}`}>{COMPANY_IDENTITY.contactEmail}</a>.</p></div>}
+            </form>
+          )}
         </div>
+        <aside className="min-w-0 border-t border-slate-900/15 pt-8 dark:border-white/15 lg:border-t-0 lg:pt-0">
+          <p className="studio-kicker">Prefer email?</p>
+          <a href={`mailto:${COMPANY_IDENTITY.contactEmail}`} className="mt-3 inline-flex min-h-11 max-w-full items-center break-all font-display text-xl text-slate-950 underline decoration-cyan-600/50 underline-offset-8 hover:text-cyan-700 dark:text-white dark:hover:text-cyan-300">{COMPANY_IDENTITY.contactEmail}</a>
+          <div className="mt-10 border-t border-slate-900/15 pt-7 dark:border-white/15"><h2 className="font-display text-xl text-slate-950 dark:text-white">Start with the context.</h2><p className="studio-copy mt-3">You don’t need a finished brief. Tell us what you want to improve and where you’re getting stuck.</p><p className="studio-copy mt-4">From there, we can discuss the fit, scope, and a useful next step.</p></div>
+        </aside>
       </div>
     </section>
   );

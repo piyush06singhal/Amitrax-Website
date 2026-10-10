@@ -1,6 +1,6 @@
 /**
  * AmitraX Capabilities Configuration
- * Defines what AmitraX builds across 6 core pillars, along with interactive node data.
+ * Defines the kinds of digital work AmitraX can help clients create.
  */
 
 export interface CapabilityItem {
@@ -19,110 +19,110 @@ export interface CapabilityItem {
 export const CAPABILITIES: CapabilityItem[] = [
   {
     id: 'digital-products',
-    title: 'Digital Products',
-    shortName: 'Products',
-    tagline: 'Web and software products designed around real user needs',
+    title: 'Digital Experiences',
+    shortName: 'Experiences',
+    tagline: 'Websites and digital products shaped around real user needs',
     summary:
-      'We conceive, design, and engineer modern digital products from zero to one. Every interaction is sculpted to eliminate friction and maximize intuitive workflow speed.',
+      'We help turn an idea into a focused, polished digital experience that customers and teams can actually use.',
     detailedScope: [
-      'Full-lifecycle product strategy and user journey mapping',
-      'End-to-end interactive prototypes and design system tokenization',
-      'Production application development with modern reactive architectures',
-      'Telemetry instrumentation and continuous user feedback loops'
+      'Goals, audiences, and user journeys',
+      'Wireframes and interactive prototypes',
+      'Responsive website or application development',
+      'A clear path for future improvements'
     ],
-    technologies: ['React 19', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Vite'],
+    technologies: ['Responsive design', 'Content structure', 'Interactive prototypes', 'Web development'],
     accentColor: '#38bdf8',
     nodePosition: { x: 0, y: -160, angle: 0 },
-    systemGuarantees: ['Sub-16ms tactile UI feedback', 'Zero-bloat bundle payloads', 'Strict WCAG AA accessibility']
+    systemGuarantees: ['Clear user journeys', 'Responsive layouts', 'Accessible foundations']
   },
   {
     id: 'software-platforms',
-    title: 'Software Platforms',
-    shortName: 'Platforms',
-    tagline: 'Scalable platforms for businesses, institutions, and digital ecosystems',
+    title: 'Team Tools',
+    shortName: 'Team Tools',
+    tagline: 'Useful web apps and tools for the way your team works',
     summary:
-      'We engineer durable multi-tenant backends, resilient application services, and unified data backbones built to handle high concurrency without operational degradation.',
+      'We create custom tools for teams that have outgrown spreadsheets, disconnected systems, or generic software.',
     detailedScope: [
-      'Distributed services and modular backend architectures',
-      'Relational and document database schema modeling',
-      'Role-based granular access control (RBAC) and security boundaries',
-      'High-throughput asynchronous job workers and streaming queues'
+      'Simple, focused feature planning',
+      'Dashboards, forms, and content workflows',
+      'Connected data and third-party services',
+      'A maintainable foundation for your team'
     ],
-    technologies: ['Node.js', 'Go', 'PostgreSQL', 'Redis', 'Docker', 'REST / gRPC'],
+    technologies: ['Dashboards', 'Forms', 'Content workflows', 'Connected services'],
     accentColor: '#3b82f6',
     nodePosition: { x: 140, y: -80, angle: 60 },
-    systemGuarantees: ['High-throughput concurrency', 'Strict schema validation', 'Sub-50ms query optimization']
+    systemGuarantees: ['Useful workflows', 'Clear information', 'Room to grow']
   },
   {
     id: 'intelligent-systems',
-    title: 'Intelligent Systems',
-    shortName: 'AI & Systems',
-    tagline: 'AI-powered applications, intelligent workflows, and data-driven systems',
+    title: 'Smart Workflows',
+    shortName: 'Smart Workflows',
+    tagline: 'Thoughtful automation where it genuinely helps',
     summary:
-      'We integrate machine intelligence not as a marketing novelty, but as a grounded computational layer that extracts actionable insight and automates high-dimensional decisions.',
+      'When automation or AI can remove repetitive work or improve a customer experience, we help introduce it carefully and practically.',
     detailedScope: [
-      'Context-aware retrieval augmented generation (RAG) pipelines',
-      'Strict schema validation and deterministic output enforcement',
-      'Multimodal document understanding and structured entity extraction',
-      'Autonomous agent verification loops and safety guardrails'
+      'Workflow and automation opportunities',
+      'Content and information organisation',
+      'Human-friendly AI-assisted features',
+      'Clear review points and sensible guardrails'
     ],
-    technologies: ['Gemini Multimodal SDK', 'Vector Databases', 'Python', 'FastAPI', 'Embeddings'],
+    technologies: ['Automation', 'AI-assisted features', 'Content organisation', 'Human review'],
     accentColor: '#a855f7',
     nodePosition: { x: 140, y: 80, angle: 120 },
-    systemGuarantees: ['Zero ungrounded hallucinations', 'Cryptographic safety filtering', 'Transparent decision telemetry']
+    systemGuarantees: ['Practical use cases', 'Human oversight', 'Clear expectations']
   },
   {
     id: 'web-applications',
     title: 'Web Applications',
     shortName: 'Web Apps',
-    tagline: 'Modern, responsive, performant applications for real-world use',
+    tagline: 'Responsive experiences that feel good on every screen',
     summary:
-      'We push the capabilities of modern browsers with high-performance client rendering, offline-first state persistence, and fluid spatial micro-interactions.',
+      'We build web experiences that are easy to navigate, quick to understand, and comfortable to use on phones, tablets, and desktops.',
     detailedScope: [
-      'Single-page and multi-page hybrid web architectures',
-      'Offline-capable local-first state caching and synchronization',
-      'WebGL and hardware-accelerated 3D visual environments',
-      'Progressive Web App (PWA) compliance and service worker caching'
+      'Responsive page and component design',
+      'Accessible navigation and interaction states',
+      'Subtle motion that supports the experience',
+      'Content, forms, and integrations'
     ],
-    technologies: ['Three.js', 'WebGL', 'Motion', 'IndexedDB', 'Web Workers'],
+    technologies: ['Responsive layouts', 'Accessible interactions', 'Motion', 'Integrations'],
     accentColor: '#10b981',
     nodePosition: { x: 0, y: 160, angle: 180 },
-    systemGuarantees: ['60+ FPS fluid frame rates', 'Sub-second initial paint', 'Instant responsive layout shifts']
+    systemGuarantees: ['Mobile-friendly layouts', 'Accessible interactions', 'Polished details']
   },
   {
     id: 'automation',
     title: 'Automation & Workflows',
     shortName: 'Automation',
-    tagline: 'Systems designed to reduce repetitive work and simplify complex processes',
+    tagline: 'Workflows that reduce repetitive work and simplify complex processes',
     summary:
-      'We construct intelligent automation pipelines that replace manual handoffs, connect disparate third-party services, and run self-healing operational loops.',
+      'We connect the tools you already use and reduce repetitive handoffs, copying, and follow-up work.',
     detailedScope: [
-      'Event-driven asynchronous job scheduling and orchestration',
-      'Bi-directional synchronization between legacy tools and modern apps',
-      'Automated data ingestion, sanitization, and alert routing',
-      'Exception recovery and dead-letter queue resolution'
+      'Workflow mapping',
+      'Forms, notifications, and follow-ups',
+      'Third-party integrations',
+      'Documentation your team can understand'
     ],
-    technologies: ['Temporal', 'Event Streams', 'Webhooks', 'Async Queues', 'BullMQ'],
+    technologies: ['Forms', 'Notifications', 'Webhooks', 'Connected services'],
     accentColor: '#06b6d4',
     nodePosition: { x: -140, y: 80, angle: 240 },
-    systemGuarantees: ['Zero silent job failures', 'Idempotent execution', 'Comprehensive audit trails']
+    systemGuarantees: ['Less manual work', 'Clear ownership', 'Understandable workflows']
   },
   {
     id: 'technology-products',
-    title: 'Technology Products',
-    shortName: 'Tech Products',
-    tagline: 'Purpose-built solutions combining software, systems, and emerging tech',
+    title: 'Custom Solutions',
+    shortName: 'Custom Solutions',
+    tagline: 'Focused digital solutions for a specific business need',
     summary:
-      'We combine software engineering with advanced systems research to prototype purpose-built digital tools that address emerging organizational barriers.',
+      'For unusual or specialised challenges, we create a focused solution instead of forcing your needs into a generic template.',
     detailedScope: [
-      'Exploratory prototypes tackling high-friction technical bottlenecks',
-      'Cross-cutting distributed synchronization protocols',
-      'Zero-overhead runtime telemetry and performance probes',
-      'Specialized developer tools and internal software SDKs'
+      'A clear definition of the problem',
+      'A focused concept or prototype',
+      'Design and development around the use case',
+      'A practical plan for what comes next'
     ],
-    technologies: ['WebAssembly', 'WebRTC DataChannels', 'CRDTs', 'Edge Runtimes'],
+    technologies: ['Prototyping', 'Web development', 'Integrations', 'Automation'],
     accentColor: '#ec4899',
     nodePosition: { x: -140, y: -80, angle: 300 },
-    systemGuarantees: ['Mathematical state convergence', 'Sub-millisecond local latency', 'Open standards compliance']
+    systemGuarantees: ['Focused scope', 'Honest recommendations', 'Room for learning']
   }
 ];

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const CustomCursor: React.FC = () => {
   const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [trailingPos, setTrailingPos] = useState({ x: -100, y: -100 });
+  const positionRef = useRef({ x: -100, y: -100 });
+  const trailingRef = useRef({ x: -100, y: -100 });
+  const trailingElementRef = useRef<HTMLDivElement>(null);
   const [cursorState, setCursorState] = useState<'default' | 'pointer' | 'cta' | '3d' | 'media' | 'text'>('default');
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(true);
@@ -25,7 +27,8 @@ export const CustomCursor: React.FC = () => {
 
     const onMouseMove = (e: MouseEvent) => {
       setIsVisible(true);
-      setPosition({ x: e.clientX, y: e.clientY });
+      positionRef.current = { x: e.clientX, y: e.clientY };
+      setPosition(positionRef.current);
 
       // Determine state based on hovered element
       const target = e.target as HTMLElement | null;
@@ -77,7 +80,8 @@ export const CustomCursor: React.FC = () => {
     };
   }, []);
 
-  // Smooth dampening for trailing cursor ring
+  // Smooth dampening for trailing cursor ring. Keep the animation loop out of
+  // React state: cursor movement should not re-render the entire app per frame.
   useEffect(() => {
     if (isTouchDevice) return;
 
@@ -85,16 +89,19 @@ export const CustomCursor: React.FC = () => {
     const lerp = 0.2; // Snappy physical damping
 
     const follow = () => {
-      setTrailingPos((prev) => ({
-        x: prev.x + (position.x - prev.x) * lerp,
-        y: prev.y + (position.y - prev.y) * lerp,
-      }));
+      const target = positionRef.current;
+      const current = trailingRef.current;
+      current.x += (target.x - current.x) * lerp;
+      current.y += (target.y - current.y) * lerp;
+      if (trailingElementRef.current) {
+        trailingElementRef.current.style.transform = `translate3d(${current.x}px, ${current.y}px, 0) translate(-50%, -50%)`;
+      }
       animationFrameId = requestAnimationFrame(follow);
     };
 
     animationFrameId = requestAnimationFrame(follow);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position, isTouchDevice]);
+  }, [isTouchDevice]);
 
   if (isTouchDevice || !isVisible) return null;
 
@@ -125,9 +132,9 @@ export const CustomCursor: React.FC = () => {
 
       {/* Trailing halo ring with state morphing */}
       <div
+        ref={trailingElementRef}
         className="fixed top-0 left-0 pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300"
         style={{
-          transform: `translate3d(${trailingPos.x}px, ${trailingPos.y}px, 0)`,
           opacity: isVisible ? 1 : 0,
         }}
       >

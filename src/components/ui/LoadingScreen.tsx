@@ -68,7 +68,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               Amitra<span className="text-cyan-500">X</span>
             </h1>
             <p className="text-[10px] font-mono text-slate-500 tracking-widest mb-4 uppercase">
-              TECHNOLOGY, BUILT WITH PURPOSE
+              DIGITAL WORK, BUILT WITH PURPOSE
             </p>
 
             {/* Progress line */}

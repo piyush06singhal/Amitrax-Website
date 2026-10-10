@@ -1,159 +1,22 @@
-import React, { useState } from 'react';
-import { COMPANY_STORY } from '../../data/company';
-import {
-  Code2,
-  BrainCircuit,
-  Sparkles,
-  Target
-} from 'lucide-react';
+import React from 'react';
+import { Reveal } from '../motion/Reveal';
+import { StudioWorkbench } from '../studio/StudioWorkbench';
 
-export const AboutSection: React.FC = () => {
-  const [activeStoryStep, setActiveStoryStep] = useState<number>(0);
-
-  const disciplines = [
-    {
-      icon: <Code2 className="w-5 h-5 text-cyan-400" />,
-      title: 'Software Engineering',
-      description: 'Disciplined, typed codebases, resilient backend APIs, and modern architecture built for high reliability and scale.',
-    },
-    {
-      icon: <Target className="w-5 h-5 text-blue-400" />,
-      title: 'Product Thinking',
-      description: 'Focusing on the actual problem before writing code. Defining clear user jobs-to-be-done and business constraints.',
-    },
-    {
-      icon: <Sparkles className="w-5 h-5 text-purple-400" />,
-      title: 'Thoughtful Design',
-      description: 'Crafting interfaces that feel intuitive, fast, and accessible, turning complex data and workflows into human experiences.',
-    },
-    {
-      icon: <BrainCircuit className="w-5 h-5 text-emerald-400" />,
-      title: 'Emerging Technologies',
-      description: 'Pragmatic application of machine intelligence, spatial 3D web, and automation without speculative hype or bloat.',
-    },
-  ];
-
-  return (
-    <section id="about" className="relative w-full py-20 lg:py-28 bg-white dark:bg-[#04060d]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
-        {/* 1. Who We Are, What We Believe, What We Build */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-7 rounded-2xl bg-white dark:bg-[#090e21]/80 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md space-y-3">
-            <span className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider block">
-              01 • IDENTITY
-            </span>
-            <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">Who are we?</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              We are an ambitious software and product engineering company founded to bridge the divide between theoretical innovation and resilient, production-ready software.
-            </p>
-          </div>
-
-          <div className="p-7 rounded-2xl bg-white dark:bg-[#090e21]/80 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md space-y-3">
-            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider block">
-              02 • CREED
-            </span>
-            <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">What do we believe?</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              We believe technology is not an end in itself. Software exists to remove human friction, automate tedious labor, and provide clarity to organizations navigating complexity.
-            </p>
-          </div>
-
-          <div className="p-7 rounded-2xl bg-white dark:bg-[#090e21]/80 border border-slate-200 dark:border-white/10 shadow-sm dark:backdrop-blur-md space-y-3">
-            <span className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider block">
-              03 • OBJECTIVE
-            </span>
-            <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">What are we building?</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              We are building modern digital products, reliable multi-tenant software platforms, and grounded intelligent systems that deliver tangible value from day one.
-            </p>
-          </div>
+export const AboutSection: React.FC = () => (
+  <section id="about" className="studio-section">
+    <div className="studio-container grid items-center gap-9 lg:grid-cols-2 lg:gap-16">
+      <Reveal className="order-2 lg:order-1">
+        <p className="studio-kicker mb-4">WHY AMITRAX EXISTS</p>
+        <h2 className="studio-title">Less friction.<br />More intention.</h2>
+        <div className="studio-copy mt-6 space-y-5">
+          <p>AmitraX began with a simple conviction: digital work should make life easier for the people using it. A website should explain. A tool should help. Neither should get in the way.</p>
+          <p>We’re a small, independent studio at the beginning of our journey. Our focus is on websites, web applications, and connected workflows, with content, design, and code considered together.</p>
+          <p>That means asking questions before adding features, getting the essential experience right, and leaving a foundation that can be understood and improved.</p>
         </div>
-
-        {/* 2. The 4 Interlocking Disciplines */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 dark:bg-gradient-to-br dark:from-[#0a1024] dark:to-[#060914] border border-slate-200 dark:border-cyan-500/20 shadow-sm dark:shadow-xl space-y-6">
-          <div>
-            <span className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider block mb-1">
-              THE AMITRAX INTERSECTION
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900 dark:text-white">
-              Where Engineering Meets Craft
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 max-w-2xl mt-1">
-              True technological leverage happens when four distinct disciplines work in tight harmony:
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {disciplines.map((disc, idx) => (
-              <div key={idx} className="p-5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 space-y-2">
-                <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 w-fit mb-3">
-                  {disc.icon}
-                </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white font-display">{disc.title}</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{disc.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 3. Company Story: Visual Storytelling (Problem → Idea → Build → Learn → Improve) */}
-        <div className="space-y-6">
-          <div>
-            <span className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wider block mb-1">
-              ORIGIN & TRAJECTORY
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900 dark:text-white">
-              {COMPANY_STORY.headline}
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 max-w-2xl mt-1">
-              {COMPANY_STORY.subheadline}
-            </p>
-          </div>
-
-          {/* Horizontal Step Progression Buttons */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {COMPANY_STORY.stages.map((step, idx) => (
-              <button
-                key={step.phase}
-                type="button"
-                id={`story-step-${step.step}`}
-                onClick={() => setActiveStoryStep(idx)}
-                className={`p-4 rounded-xl text-left transition-all border cursor-pointer ${
-                  activeStoryStep === idx
-                    ? 'bg-gradient-to-b from-cyan-500/20 to-blue-600/20 border-cyan-400 text-slate-900 dark:text-white shadow-lg'
-                    : 'bg-white dark:bg-[#080d1e]/80 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-cyan-700 dark:text-cyan-400 font-mono">{step.step}</span>
-                  {activeStoryStep === idx && (
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                  )}
-                </div>
-                <div className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">{step.phase}</div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{step.title}</div>
-              </button>
-            ))}
-          </div>
-
-          {/* Active Story Step Focus Card */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#090e21] border border-slate-200 dark:border-cyan-500/30 shadow-sm dark:shadow-2xl dark:backdrop-blur-xl">
-            <div className="max-w-3xl space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-500/40">
-                  PHASE {COMPANY_STORY.stages[activeStoryStep].step} // {COMPANY_STORY.stages[activeStoryStep].phase}
-                </span>
-                <h4 className="text-xl font-bold font-display text-slate-900 dark:text-white">
-                  {COMPANY_STORY.stages[activeStoryStep].title}
-                </h4>
-              </div>
-              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-                {COMPANY_STORY.stages[activeStoryStep].description}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+      </Reveal>
+      <Reveal className="order-1 lg:order-2" delay={0.1}>
+        <StudioWorkbench />
+      </Reveal>
+    </div>
+  </section>
+);
